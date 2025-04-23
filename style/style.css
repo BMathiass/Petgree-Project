@@ -1,0 +1,184 @@
+/* Reset básico */
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Layout geral */
+body {
+  background-color: #f1f1f1;
+  display: flex;
+  justify-content: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Wrapper principal */
+.wrapper {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  margin: 0 auto;
+  background-color: #ffffff;
+}
+
+/* Links padrão */
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Menu lateral */
+.menu {
+  background-color: rgb(158, 229, 250);
+  font-size: large;
+  box-shadow: 1px 1px 10px 2px rgba(86, 83, 83, 0.432);
+  border-right: solid 1px #ffffff;
+  display: flex;
+  flex-direction: column;
+  width: 15%;
+  padding: 7px;
+}
+
+/* Cabeçalho */
+.header {
+  background-color: rgb(2, 55, 247);
+  min-height: 100px;
+}
+
+/* Logo / imagem no header */
+.design img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Área principal */
+.main {
+  display: flex;
+  flex-direction: column;
+  width: 85%;
+}
+
+/* Conteúdo principal */
+.principal {
+  padding: 20px;
+}
+
+/* Tabelas */
+table {
+  border: 1px solid rgb(0, 0, 0);
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+thead th {
+  background-color: rgb(0, 51, 255);
+  color: #000000;
+  padding: 12px;
+  text-align: center;
+}
+
+tbody td {
+  border: 1px solid rgb(0, 0, 0);
+  padding: 10px;
+  text-align: center;
+}
+
+tbody tr:nth-child(even) {
+  background-color: rgb(225, 225, 225);
+}
+
+/* Publicações de cuidados */
+.pubcuidados {
+  padding: 10px;
+  margin: 10px;
+  background-color: rgb(243, 243, 240);
+}
+
+.pub {
+  border: 1px solid rgba(152, 149, 149, 0.669);
+  margin: 10px;
+  box-shadow: 0px 1px 5px 0.3px rgb(67, 66, 66);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Formulário */
+.formulario {
+  background-color: #e9e9e9;
+  padding: 40px;
+  border-radius: 5px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.formulario h2 {
+  color: #4e4e4e;
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.formulario p {
+  font-size: 16px;
+  color: #7f7f7f;
+  margin-bottom: 20px;
+}
+
+.formulario label {
+  font-weight: bold;
+  margin-bottom: 5px;
+  display: block;
+  color: #4e4e4e;
+}
+
+.formulario input,
+.formulario textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.formulario textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.formulario button {
+  background-color: #6abf69;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.formulario button:hover {
+  background-color: #55a153;
+}
+
+/* Footer */
+footer {
+  background-color: rgb(73, 200, 242);
+  color: #000000;
+  margin-top: 10px;
+  padding: 10px;
+  text-align: center;
+}
+
+/* Ícones sociais */
+.social-icon img {
+  width: 40px;
+  border-radius: 5px;
+  margin: 0 5px;
+}
