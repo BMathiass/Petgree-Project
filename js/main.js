@@ -4,8 +4,12 @@ async function enviarContato() {
     const telefone = document.getElementById('telefone').value;
     const mensagem = document.getElementById('mensagem').value;
 
+    const baseURL = window.location.hostname === 'localhost'
+        ? 'http://localhost:3000'
+        : 'https://desafio-html-dio.onrender.com';
+
     try {
-        const response = await fetch('https://desafio-html-dio.onrender.com', {
+        const response = await fetch(`${baseURL}/submit-contato`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nome, email, telefone, mensagem })
