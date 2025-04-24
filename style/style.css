@@ -61,6 +61,11 @@ a {
   width: 85%;
 }
 
+main {
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
 /* Conteúdo principal */
 .principal {
   padding: 20px;
