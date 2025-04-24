@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { salvarEmail } = require('./formHandler');
+const { salvarContato } = require('./formHandler');
 
-router.post('/submit-email', salvarEmail);
+router.post('/submit-contato', salvarContato);
 
 module.exports = router;
