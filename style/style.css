@@ -34,10 +34,10 @@ a {
   background-color: rgb(158, 229, 250);
   font-size: large;
   box-shadow: 1px 1px 10px 2px rgba(86, 83, 83, 0.432);
-  border-right: solid 1px #ffffff;
+  border-right: solid 0px;
   display: flex;
   flex-direction: column;
-  width: 15%;
+  width: 200px;
   padding: 7px;
 }
 
@@ -59,6 +59,11 @@ a {
   display: flex;
   flex-direction: column;
   width: 85%;
+}
+
+main {
+  margin-left: 20px;
+  margin-right: 20px;
 }
 
 /* Conteúdo principal */
