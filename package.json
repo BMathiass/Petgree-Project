@@ -1,0 +1,26 @@
+{
+  "name": "desafio_html_dio",
+  "version": "1.0.0",
+  "description": "Projeto feito no curso da DIO de Web Developer HTML",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BMathiass/desafio_html_DIO.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BMathiass/desafio_html_DIO/issues"
+  },
+  "homepage": "https://github.com/BMathiass/desafio_html_DIO#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.0"
+  }
+}
