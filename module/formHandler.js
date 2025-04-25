@@ -17,18 +17,26 @@ db.connect(err => {
     console.log("Conectado ao MySQL com sucesso.");
 });
 
-function salvarEmail(req, res) {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ message: "E-mail é obrigatório." });
+function salvarContato(req, res) {
+    const { nome, email, telefone, mensagem } = req.body;
 
-    const query = "INSERT INTO form_table (email) VALUES (?)";
-    db.query(query, [email], (err) => {
+    if (!nome || !email || !mensagem) {
+        return res.status(400).json({ message: "Nome, e-mail e mensagem são obrigatórios." });
+    }
+
+    const query = `
+        INSERT INTO contatos_clientes (nome, email, telefone, mensagem)
+        VALUES (?, ?, ?, ?)
+    `;
+
+    db.query(query, [nome, email, telefone, mensagem], (err) => {
         if (err) {
             console.error(err);
-            return res.status(500).json({ message: "Erro ao salvar e-mail." });
+            return res.status(500).json({ message: "Erro ao salvar o contato." });
         }
-        res.status(200).json({ message: "E-mail salvo com sucesso!" });
+
+        res.status(200).json({ message: "Contato salvo com sucesso!" });
     });
 }
 
-module.exports = { salvarEmail };
+module.exports = { salvarContato };
