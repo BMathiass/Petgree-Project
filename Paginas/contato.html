@@ -10,71 +10,67 @@
 </head>
 
 <body>
-  <div class="wrapper">
-    <div class="menu">
-      <ul>
-        <li><a href="../index.html">Principal</a></li>
-        <li><a href="sobre.html">Sobre a clinica</a></li>
-        <li><a href="horario.html">Atendimento</a></li>
-        <li><a href="contato.html">Contato</a></li>
-      </ul>
+  <!-- Cabeçalho -->
+  <header>
+    <img src="/images/pet.png" alt="">
+  </header>
+
+  <!-- Barra de Navegação -->
+  <nav>
+    <ul>
+      <li><a href="../index.html">Principal</a></li>
+      <li><a href="horario.html">Atendimento</a></li>s
+      <li><a href="sobre.html">Sobre Nós</a></li>
+      <li><a href="contato.html">Contato</a></li>
+    </ul>
+  </nav>
+
+  <main>
+    <div class="formulario">
+      <h2>Entre em Contato Conosco</h2>
+      <p>Preencha o fomulário abaixo e nossa equipe entrará em contato o mais breve possivel.</p>
+
+      <form action="#" method="post">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
+
+        <label for="email">E-mail:</label>
+        <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
+
+        <label for="telefone">Telefone:</label>
+        <input type="tel" id="telefone" name="telefone" placeholder="Seu telefone" required>
+
+        <label for="mensagem">Mensagem:</label>
+        <textarea id="mensagem" name="mensagem" placeholder="Escreva sua mensagem" rows="4" required></textarea>
+
+        <button type="submit">Enviar Mensagem</button>
+      </form>
+      <iframe
+        src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1877.3972050535303!2d-47.95934419803853!3d-19.763887556456545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1745375919618!5m2!1spt-BR!2sbr"
+        width="515" height="400" style="border:0;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>
     </div>
-    <!-- end wrapper -->
-
-    <div class="main">
-      <header class="header">
-        <a href="#" class="design"><img src="../images/design-2.png" alt=""></a>
-      </header>
-      <main>
-        <div class="formulario">
-          <h2>Entre em Contato Conosco</h2>
-          <p>Preencha o fomulário abaixo e nossa equipe entrará em contato o mais breve possivel.</p>
-
-          <form action="#" method="post">
-            <label for="nome">Nome:</label>
-            <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required>
-
-            <label for="email">E-mail:</label>
-            <input type="email" id="email" name="email" placeholder="Seu e-mail" required>
-
-            <label for="telefone">Telefone:</label>
-            <input type="tel" id="telefone" name="telefone" placeholder="Seu telefone" required>
-
-            <label for="mensagem">Mensagem:</label>
-            <textarea id="mensagem" name="mensagem" placeholder="Escreva sua mensagem" rows="4" required></textarea>
-
-            <button type="submit">Enviar Mensagem</button>
-          </form>
-          <iframe
-            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1877.3972050535303!2d-47.95934419803853!3d-19.763887556456545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1745375919618!5m2!1spt-BR!2sbr"
-            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade"></iframe>
-          <div class="contact-info">
-          </div>
-        </div>
-      </main>
-      <footer>
-        <div class="footer-content">
-          <div class="social-media">
-            <h4>Siga-nos nas Redes Sociais</h4>
-            <a href="#" class="social-icon"><img src="../images/instagram.png" alt="Icone do Instagram"></a>
-            <a href="#" class="social-icon"><img src="../images/facebook.png" alt="Icone do Facebook"></a>
-            <a href="#" class="social-icon"><img src="../images/twitter.png" alt="Icone do X (antigo twitter)"></a>
-            <a href="#" class="social-icon"><img src="../images/whatsapp.png" alt="Icone do Whatsapp"></a>
-          </div>
-
-          <div class="newsletter">
-            <p>Receba novidades sobre cuidados, promoções e muito mais!</p>
-            <form action="#" method="post">
-              <input type="email" placeholder="Digite seu e-mail" required>
-              <button type="submit">Assinar</button>
-            </form>
-          </div>
-        </div>
-        <div class="footer-bottom">
-          <p>&copy; 2025 Clinica Health - Todos os direitos reservados.</p>
-        </div>
-      </footer>
+  </main>
+  <footer>
+    <div class="social-media">
+      <h4>Siga-nos nas Redes Sociais</h4>
+      <a href="#" class="social-icon"><img src="/images/instagram.png" alt="Icone do Instagram"></a>
+      <a href="#" class="social-icon"><img src="/images/facebook.png" alt="Icone do Facebook"></a>
+      <a href="#" class="social-icon"><img src="/images/twitter.jpeg" alt="Icone do X (antigo twitter)"></a>
+      <a href="#" class="social-icon"><img src="/images/whatsapp.png" alt="Icone do Whatsapp"></a>
+    </div>
+    <div class="newsletter">
+      <p>Receba novidades sobre cuidados, promoções e muito mais!</p>
+      <form action="#" method="post">
+        <input type="email" placeholder="Digite seu e-mail" required>
+        <button type="submit">Assinar</button>
+      </form>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Clinica Health - Todos os direitos reservados.</p>
+    </div>
+  </footer>
 </body>
 
 </html>
