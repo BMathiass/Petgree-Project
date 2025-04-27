@@ -1,6 +1,7 @@
 const formModel = require('../models/formModel');
 
 exports.salvarContato = async (req, res) => {
+    console.log('Body recebido:', req.body);
     const { nome, email, telefone, mensagem } = req.body;
 
     if (!nome || !email || !mensagem) {

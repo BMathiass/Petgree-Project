@@ -1,10 +1,14 @@
-async function enviarContato() {
+// main.js
+
+async function enviarContato(event) {
+    event.preventDefault(); // Impede o envio tradicional do formulário
+
     const nome = document.getElementById('nome').value;
     const email = document.getElementById('email').value;
     const telefone = document.getElementById('telefone').value;
     const mensagem = document.getElementById('mensagem').value;
 
-    const baseURL = window.location.hostname === 'localhost'
+    const baseURL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
         ? 'http://localhost:3000'
         : 'https://petgree-project.onrender.com';
 
@@ -16,9 +20,15 @@ async function enviarContato() {
         });
 
         const data = await response.json();
+        
         alert(data.message || "Contato enviado com sucesso!");
     } catch (error) {
         console.error('Erro ao enviar contato:', error);
         alert('Erro ao enviar o contato');
     }
 }
+
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('formContato');
+    form.addEventListener('submit', enviarContato);
+});
