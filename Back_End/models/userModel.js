@@ -16,7 +16,7 @@ exports.createUser = (nome, email, senha) => {
     return new Promise((resolve, reject) => {
         const query = `
             INSERT INTO usuarios (nome, email, senha)
-            VALUES (?, ?, ?)
+            VALUES ($1, $2, $3)
         `;
         db.query(query, [nome, email, senha], (err, results) => {
             if (err) {

@@ -8,6 +8,11 @@ const authRoutes = require('./routes/authRoutes');
 app.use('/api/form', formRoutes);
 app.use('/api/auth', authRoutes);
 
+// Rota raiz
+app.get('/', (req, res) => {
+    res.send('API funcionando 🚀');
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor rodando na porta ${PORT}`);

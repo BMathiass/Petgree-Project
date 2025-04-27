@@ -9,7 +9,7 @@ async function enviarContato() {
         : 'https://petgree-project.onrender.com';
 
     try {
-        const response = await fetch(`${baseURL}/submit-contato`, {
+        const response = await fetch(`${baseURL}/api/form/submit-contato`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nome, email, telefone, mensagem })
