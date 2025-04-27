@@ -1,8 +1,14 @@
-const app = require('./module/app');
-const routes = require('./module/api');
+require('dotenv').config();
+const app = require('./modules/app');
 
-app.use('/', routes);
+const formRoutes = require('./routes/formRoutes');
+const authRoutes = require('./routes/authRoutes');
 
-app.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000');
+// Rotas
+app.use('/api/form', formRoutes);
+app.use('/api/auth', authRoutes);
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
