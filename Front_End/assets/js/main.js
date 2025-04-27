@@ -6,7 +6,7 @@ async function enviarContato() {
 
     const baseURL = window.location.hostname === 'localhost'
         ? 'http://localhost:3000'
-        : 'https://desafio-html-dio.onrender.com';
+        : 'https://petgree-project.onrender.com';
 
     try {
         const response = await fetch(`${baseURL}/submit-contato`, {
