@@ -1,28 +1,27 @@
 {
-  "name": "desafio_html_dio",
+  "name": "petgree-project",
   "version": "1.0.0",
-  "description": "Projeto feito no curso da DIO de Web Developer HTML",
+  "description": "Petgree",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/BMathiass/desafio_html_DIO.git"
+    "url": "git+https://github.com/BMathiass/Petgree-Project.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/BMathiass/desafio_html_DIO/issues"
+    "url": "https://github.com/BMathiass/Petgree-Project/issues"
   },
-  "homepage": "https://github.com/BMathiass/desafio_html_DIO#readme",
+  "homepage": "https://github.com/BMathiass/Petgree-Project#readme",
   "dependencies": {
     "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^5.1.0",
-    "mysql2": "^3.14.0",
     "pg": "^8.15.6"
   }
 }
