@@ -1,4 +1,40 @@
+import { FormatUtils } from './formatUtils.js';
+
 export const DomUtils = {
+    setupInputMasks() {
+        const telefoneInput = document.getElementById('telefone');
+        const cpfInput = document.getElementById('cpf');
+
+        if (telefoneInput) {
+            telefoneInput.addEventListener('input', (e) => {
+                const { value, selectionStart } = e.target;
+                const formatted = FormatUtils.formatTelefone(value);
+                
+                e.target.value = formatted;
+                
+                // Ajusta a posição do cursor para após o último dígito inserido
+                if (selectionStart < value.length) {
+                    const diff = formatted.length - value.length;
+                    e.target.setSelectionRange(selectionStart + diff, selectionStart + diff);
+                }
+            });
+        }
+
+        if (cpfInput) {
+            cpfInput.addEventListener('input', (e) => {
+                const { value, selectionStart } = e.target;
+                const formatted = FormatUtils.formatCPF(value);
+                
+                e.target.value = formatted;
+                
+                // Ajusta a posição do cursor
+                if (selectionStart < value.length) {
+                    const diff = formatted.length - value.length;
+                    e.target.setSelectionRange(selectionStart + diff, selectionStart + diff);
+                }
+            });
+        }
+    },
     // Função para pegar os valores do formulário
     getFormValues(formId) {
         const form = document.getElementById(formId);

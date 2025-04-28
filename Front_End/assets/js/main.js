@@ -2,12 +2,8 @@ import { FormController } from './controllers/formController.js';
 import { DomUtils } from './utils/domUtils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-
     new FormController('formContato');
-});
-
-window.onload = function () {
-    DomUtils.displayRequestId();
+    DomUtils.setupInputMasks(); // também pode colocar aqui
 
     const finalizarBtn = document.getElementById('finalizar-btn');
     if (finalizarBtn) {
@@ -15,4 +11,4 @@ window.onload = function () {
             window.location.href = '../public/index.html';
         });
     }
-};
+});
