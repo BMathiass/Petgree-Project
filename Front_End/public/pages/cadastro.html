@@ -19,7 +19,7 @@
   <!-- Barra de Navegação -->
   <nav>
     <ul>
-      <li><a href="../public/index.html">Inicio</a></li>
+      <li><a href="../index.html">Inicio</a></li>
       <li><a href="horario.html">Atendimento</a></li>
       <li><a href="sobre.html">Sobre Nós</a></li>
       <li><a href="contato.html">Contato</a></li>
@@ -27,23 +27,46 @@
     </ul>
   </nav>
 
-  <!-- Sessão Principal -->
+  <!-- Sessão Principal de Cadastro -->
   <main>
     <div class="formulario">
-      <h2 class="titleLogin">Acesse sua conta</h2>
-      <form id="formLogin" method="post">
-        <label for="email">E-mail:</label>
-        <input type="email" name="email" class="dados" placeholder="Seu e-mail" required>
+      <h2 class="titleLogin">Criar conta</h2>
+      <form id="formCadastro" method="post">
+        <label for="nome">Nome</label>
+        <input type="text" class="dados" name="nome" placeholder="Nome completo*" required>
 
-        <label for="password">Senha:</label>
-        <input type="password" name="password" class="dados" placeholder="Senha" required>
+        <label for="cpf">CPF</label>
+        <input type="text" class="dados" name="cpf" pattern="\d{11}" maxlength="11" required placeholder="CPF*">
 
-        <button type="submit">Entrar</button>
+        <label for="email">E-mail</label>
+        <input type="email" class="dados" name="email" placeholder="E-mail*" required>
+
+        <label for="senha">Senha</label>
+        <input type="password" class="dados" name="senha" placeholder="Senha*" required>
+
+        <label for="confirmaSenha">Confirme sua Senha</label>
+        <input type="password" class="dados" name="confirmaSenha" placeholder="Confirme sua senha*" required>
+
+        <label for="telefone">Telefone Celular</label>
+        <input type="text" class="dados" name="numero" pattern="\d{11}" maxlength="11" placeholder="Telefone">
+
+        <p id="legenda">(*) Campos obrigatórios</p>
+
+        <div id="news">
+          <input type="checkbox" name="news"> Quero receber ofertas e novidades pelo Whatsapp, SMS ou e-mail!
+        </div>
+
+        <div id="politicas">
+          <input type="checkbox" name="politicas" required> Li e estou de acordo com as <a href="#">políticas
+            da empresa e políticas de privacidade.*</a>
+        </div>
+
+        <button type="submit">Continuar</button>
       </form>
 
       <div class="login">
-        <span>Novo na Petgree!</span>
-        <a href="../pages/cadastro.html">CADASTRE-SE</a>
+        <span>Já possui cadastro?</span>
+        <a class="entrar" href="../pages/login.html">ENTRAR</a>
       </div>
     </div>
 
