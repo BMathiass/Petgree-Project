@@ -9,9 +9,9 @@ exports.salvarContato = async (req, res) => {
     }
 
     try {
-        const requestId = Date.now(); // só pra exemplo, pode melhorar depois (UUID por exemplo)
+        const resultado = await formModel.salvarContato(nome, email, telefone, mensagem);
 
-        await formModel.salvarContato(nome, email, telefone, mensagem);
+        const requestId = resultado.id_solicitacao;
 
         res.status(200).json({
             success: true,
@@ -21,15 +21,5 @@ exports.salvarContato = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ success: false, message: "Erro ao salvar o contato." });
-    }
-};
-
-exports.confirmar = async (req, res) => {
-    try {
-        const { id } = req.body;
-        // Lógica para buscar no banco de dados
-        res.status(200).json({ success: true, id });
-    } catch (error) {
-        res.status(500).json({ success: false, error: error.message });
     }
 };

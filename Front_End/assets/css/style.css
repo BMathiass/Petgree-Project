@@ -165,8 +165,8 @@ tbody tr:nth-child(even) {
 }
 
 .formulario #politicas {
-font-size: 16px;
-padding-bottom: 25px;
+  font-size: 16px;
+  padding-bottom: 25px;
 }
 
 .formulario button {
@@ -273,5 +273,87 @@ footer p {
 
   .formulario {
     padding: 30px 20px;
+  }
+}
+
+/* Estilos do Modal */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  animation: fadeIn 0.3s;
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.close-modal {
+  position: absolute;
+  right: 20px;
+  top: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  color: #aaa;
+  cursor: pointer;
+}
+
+.close-modal:hover {
+  color: #333;
+}
+
+.success-icon {
+  color: #6abf69;
+  font-size: 60px;
+  margin: 15px 0;
+}
+
+.request-id {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 15px 0;
+  padding: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+  display: inline-block;
+}
+
+#confirmButton {
+  background-color: #6abf69;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: background-color 0.3s;
+}
+
+#confirmButton:hover {
+  background-color: #55a153;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
   }
 }

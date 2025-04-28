@@ -32,35 +32,44 @@ export const DomUtils = {
         });
     },
 
-    // Função para redirecionar para a página de confirmação
-    redirectToConfirmation(requestId) {
-        window.location.href = `../pages/confirmacao.html?requestId=${requestId}`;
+    showModal(requestId) {
+        const modal = document.getElementById('confirmationModal');
+        const requestIdElement = document.getElementById('modalRequestId');
+        const closeBtn = document.querySelector('.close-modal');
+        const confirmBtn = document.getElementById('confirmButton');
+
+        requestIdElement.textContent = requestId;
+        modal.style.display = 'block';
+
+        // Fechar modal ao clicar no X
+        closeBtn.onclick = () => {
+            modal.style.display = 'none';
+            this.resetForm('formContato');
+        };
+
+        // Fechar modal ao clicar no botão OK
+        confirmBtn.onclick = () => {
+            modal.style.display = 'none';
+            this.resetForm('formContato');
+        };
+
+        // Fechar ao clicar fora do modal
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+                this.resetForm('formContato');
+            }
+        };
     },
 
-    // Função para exibir uma mensagem de erro
+    resetForm(formId) {
+        const form = document.getElementById(formId);
+        if (form) {
+            form.reset();
+        }
+    },
+
     showError(message) {
         alert(message || "Ocorreu um erro! Tente novamente.");
-    },
-
-    // Função para pegar o parâmetro da URL
-    getUrlParameter(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-    },
-
-    // Função para exibir o requestId na página de confirmação
-    displayRequestId() {
-        const requestId = this.getUrlParameter('requestId');
-        const requestIdElement = document.getElementById('requestId');
-
-        if (requestIdElement) {
-            if (requestId) {
-                requestIdElement.textContent = requestId;
-            } else {
-                requestIdElement.textContent = 'Erro: ID não encontrado!';
-            }
-        } else {
-            console.error("Elemento com ID 'requestId' não encontrado!");
-        }
     }
 };

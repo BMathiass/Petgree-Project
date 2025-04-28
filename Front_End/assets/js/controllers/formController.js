@@ -15,8 +15,9 @@ export class FormController {
         try {
             const response = await apiService.enviarDados('/api/form/submit-contato', formData);
             console.log('Resposta recebida:', response);
+
             if (response.success) {
-                DomUtils.redirectToConfirmation(response.requestId);
+                DomUtils.showModal(response.requestId);
             } else {
                 DomUtils.showError(response.message);
             }
