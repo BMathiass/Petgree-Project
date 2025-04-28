@@ -23,7 +23,7 @@ O projeto é fruto da colaboração entre amigos, onde cada um contribuiu em uma
 
 O projeto foi idealizado para treinar e demonstrar conhecimentos em desenvolvimento web, utilizando tecnologias básicas e boas práticas de organização de código.
 
-🔸 Front-end responsável: [BMathiass](https://github.com/BMathiass)
+🔸 Front-end, UX, Acessibilidade e Mobile-First: [BMathiass](https://github.com/BMathiass)
 
 🔸 Back-end, Integração com Banco de Dados e Deploy da API: [mazevedoc](https://github.com/mazevedoc)
 
