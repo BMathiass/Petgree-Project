@@ -1,34 +1,18 @@
-// main.js
+import { FormController } from './controllers/formController.js';
+import { DomUtils } from './utils/domUtils.js';
 
-async function enviarContato(event) {
-    event.preventDefault(); // Impede o envio tradicional do formulário
+document.addEventListener('DOMContentLoaded', () => {
 
-    const nome = document.getElementById('nome').value;
-    const email = document.getElementById('email').value;
-    const telefone = document.getElementById('telefone').value;
-    const mensagem = document.getElementById('mensagem').value;
-
-    const baseURL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
-        ? 'http://localhost:3000'
-        : 'https://petgree-project.onrender.com';
-
-    try {
-        const response = await fetch(`${baseURL}/api/form/submit-contato`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nome, email, telefone, mensagem })
-        });
-
-        const data = await response.json();
-        
-        alert(data.message || "Contato enviado com sucesso!");
-    } catch (error) {
-        console.error('Erro ao enviar contato:', error);
-        alert('Erro ao enviar o contato');
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function () {
-    const form = document.getElementById('formContato');
-    form.addEventListener('submit', enviarContato);
+    new FormController('formContato');
 });
+
+window.onload = function () {
+    DomUtils.displayRequestId();
+
+    const finalizarBtn = document.getElementById('finalizar-btn');
+    if (finalizarBtn) {
+        finalizarBtn.addEventListener('click', () => {
+            window.location.href = '../public/index.html';
+        });
+    }
+};
