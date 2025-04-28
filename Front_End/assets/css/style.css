@@ -149,6 +149,10 @@ tbody tr:nth-child(even) {
   min-height: 120px;
 }
 
+.formulario .titleLogin {
+  color: #7acfe4;
+}
+
 .formulario #legenda {
   font-size: 14px;
   color: #918f8f;
@@ -194,6 +198,7 @@ padding-bottom: 25px;
 
 .formulario .login a {
   font-weight: bold;
+  color: #FF88DE;
 }
 
 /* Map Container */
