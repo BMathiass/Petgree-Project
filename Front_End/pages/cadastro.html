@@ -23,40 +23,53 @@
       <li><a href="horario.html">Atendimento</a></li>
       <li><a href="sobre.html">Sobre Nós</a></li>
       <li><a href="contato.html">Contato</a></li>
-      <li><a href="login.html">Entre/Cadastre-se</a></li>
+      <li><a href="../pages/login.html">Entre/Cadastre-se</a></li>
     </ul>
   </nav>
 
-  <!-- Sessão Principal -->
+  <!-- Sessão Principal de Cadastro -->
   <main>
     <div class="formulario">
-      <h2>Entre em Contato Conosco</h2>
-      <p>Preencha o fomulário abaixo e nossa equipe entrará em contato o mais breve possivel.</p>
+      <h2>Criar conta</h2>
+      <form class="formCadastro" method="post">
+        <label for="nome">Nome</label>
+        <input type="text" class="dados" name="nome" placeholder="Nome completo*" required>
 
-      <form id="formContato" method="post">
-        <label for="nome">Nome:</label>
-        <input type="text" class="dados" name="nome" placeholder="Seu nome completo" required>
+        <label for="cpf">CPF</label>
+        <input type="text" class="dados" name="cpf" pattern="\d{11}" maxlength="11" required placeholder="CPF*">
 
-        <label for="email">E-mail:</label>
-        <input type="email" class="dados" name="email" placeholder="Seu e-mail" required>
+        <label for="email">E-mail</label>
+        <input type="email" class="dados" name="email" placeholder="E-mail*" required>
 
-        <label for="telefone">Telefone:</label>
-        <input type="tel" class="dados" name="telefone" placeholder="Seu telefone" required>
+        <label for="senha">Senha</label>
+        <input type="password" class="dados" name="senha" placeholder="Senha*" required>
 
-        <label for="mensagem">Mensagem:</label>
-        <textarea class="dados" name="mensagem" placeholder="Escreva sua mensagem" rows="4" required></textarea>
+        <label for="confirmaSenha">Confirme sua Senha</label>
+        <input type="password" class="dados" name="confirmaSenha" placeholder="Confirme sua senha*" required>
 
-        <button type="submit">Enviar Mensagem</button>
+        <label for="telefone">Telefone Celular</label>
+        <input type="text" class="dados" name="numero" pattern="\s{11}" maxlength="11" placeholder="Telefone">
+
+        <p id="legenda">(*) Campos obrigatórios</p>
+
+        <div id="news">
+          <input type="checkbox" name="news"> Quero receber ofertas e novidades pelo Whatsapp, SMS ou e-mail!
+        </div>
+
+        <div id="politicas">
+          <input type="checkbox" name="politicas" required> Li e estou de acordo com as <a href="#">políticas
+            da empresa e políticas de privacidade.*</a>
+        </div>
+
+        <button type="submit">Continuar</button>
       </form>
 
-      <div class="map-container">
-        <iframe
-          src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d1877.3972050535303!2d-47.95934419803853!3d-19.763887556456545!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1745375919618!5m2!1spt-BR!2sbr"
-          width="515" height="400" style="border:0;" allowfullscreen="" loading="lazy"
-          referrerpolicy="no-referrer-when-downgrade">
-        </iframe>
+      <div class="login">
+        <span>Já possui cadastro?</span>
+        <a class="entrar" href="../pages/login.html">ENTRAR</a>
       </div>
     </div>
+
   </main>
 
   <!-- Rodapé -->
@@ -68,6 +81,7 @@
       <a href="#" class="social-icon"><img src="../assets/img/icons/twitter.jpeg" alt="Icone do X (antigo twitter)"></a>
       <a href="#" class="social-icon"><img src="../assets/img/icons/whatsapp.png" alt="Icone do Whatsapp"></a>
     </div>
+
     <div class="newsletter">
       <p>Receba novidades sobre cuidados, promoções e muito mais!</p>
       <form action="#" method="post">
@@ -80,6 +94,7 @@
     </div>
   </footer>
   <script type="module" src="../assets/js/main.js"></script>
+
 </body>
 
 </html>
