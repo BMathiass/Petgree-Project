@@ -36,11 +36,26 @@ class ApiService {
     async registerUser(data) {
         const response = await fetch(`${this.baseURL}/api/auth/register`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data),
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
         });
 
-        return response.json();
+        const text = await response.text(); // evita quebra se não for JSON
+        let result;
+
+        try {
+            result = text ? JSON.parse(text) : {};
+        } catch (err) {
+            result = { message: 'Resposta inválida da API.' };
+        }
+
+        if (!response.ok) {
+            throw new Error(result.message || 'Erro ao registrar usuário');
+        }
+
+        return result;
     }
 }
 

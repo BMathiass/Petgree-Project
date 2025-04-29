@@ -67,9 +67,12 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(senha, 10);
         const ofertasFinal = ofertas ? 'S' : 'N';
 
-        await userModel.createUser(nome, cpf, email, hashedPassword, telefone, ofertasFinal);
+        const newUser = await userModel.createUser(nome, cpf, email, hashedPassword, telefone, ofertasFinal);
 
-        res.status(200).json({ message: "Usuário cadastrado com sucesso!" });
+        res.status(200).json({
+            message: "Usuário cadastrado com sucesso!",
+            nome: newUser.nome
+        });
     } catch (error) {
         console.error('Erro ao cadastrar:', error);
         res.status(500).json({ message: "Erro no cadastro." });

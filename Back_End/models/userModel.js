@@ -47,7 +47,7 @@ exports.createUser = (nome, cpf, email, senha, telefone, ofertas) => {
             const query = `
                 INSERT INTO usuarios (nome, cpf, email, senha, telefone, ofertas)
                 VALUES ($1, $2, $3, $4, $5, $6)
-                RETURNING id_usuario
+                RETURNING nome
             `;
             db.query(query, [nome, cpf, email, senha, telefone, ofertas], (err, results) => {
                 if (err) {

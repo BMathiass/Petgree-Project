@@ -38,17 +38,38 @@
         <label for="cpf">CPF</label>
         <input type="text" id="cpf" class="dados" name="cpf" required placeholder="_ _ _._ _ _-_ _">
 
-        <label for="email">E-mail</label>
+        <label for="email" class="required-label">E-mail</label>
         <input type="email" class="dados" id="email" name="email" placeholder="E-mail*" required>
 
-        <label for="senha">Senha</label>
+        <label for="senha" class="required-label">Senha</label>
         <input type="password" class="dados" id="senha" name="senha" placeholder="Senha*" required>
-
+        <div id="passwordMessage"></div>
+        <div id="passwordLengthAlert" class="a-box-inner a-alert-container hidden">
+          <i class="a-icon a-icon-alert"></i>
+          <div class="a-alert-content">A senha deve ter pelo menos 6 caracteres.</div>
+        </div>
+        
+        <div id="passwordMatchAlert" class="a-box-inner a-alert-container hidden">
+          <i class="a-icon a-icon-alert"></i>
+          <div class="a-alert-content">As senhas devem coincidir.</div>
+        </div>
+        
         <label for="confirmaSenha">Confirme sua Senha</label>
         <input type="password" class="dados" id="confirmaSenha" name="confirmaSenha" placeholder="Confirme sua senha*" required>
-
+        <div id="passwordMessage"></div>
+        <div id="passwordLengthAlert" class="a-box-inner a-alert-container hidden">
+          <i class="a-icon a-icon-alert"></i>
+          <div class="a-alert-content">A senha deve ter pelo menos 6 caracteres.</div>
+        </div>
+        
+        <div id="passwordMatchAlert" class="a-box-inner a-alert-container hidden">
+          <i class="a-icon a-icon-alert"></i>
+          <div class="a-alert-content">As senhas devem coincidir.</div>
+        </div>
+        
         <label id="telefone" for="telefone">Telefone Celular</label>
-        <input type="text" id="telefone" name="telefone" class="dados" placeholder="(_ _) _ _ _ _ _-_ _ _ _" maxlength="15">
+        <input type="text" id="telefone" name="telefone" class="dados" placeholder="(_ _) _ _ _ _ _-_ _ _ _"
+          maxlength="15">
 
         <p id="legenda">(*) Campos obrigatórios</p>
 
@@ -57,7 +78,8 @@
         </div>
 
         <div id="politicas">
-          <input type="checkbox" name="politicas" required> Li e estou de acordo com as <a href="https://github.com/BMathiass/Petgree-Project?tab=readme-ov-file">políticas
+          <input type="checkbox" name="politicas" required> Li e estou de acordo com as <a
+            href="https://github.com/BMathiass/Petgree-Project?tab=readme-ov-file">políticas
             da empresa e políticas de privacidade.*</a>
         </div>
 
@@ -66,7 +88,7 @@
 
       <div id="registerMessage"></div>
 
-      
+
       <div class="login">
         <span>Já possui cadastro?</span>
         <a class="entrar" href="../pages/login.html">ENTRAR</a>
@@ -92,6 +114,28 @@
       <p>&copy; 2025 Petgree! - Todos os direitos reservados.</p>
     </div>
   </footer>
+  <!-- Modal de Confirmação -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <span class="close-modal" id="closeConfirmationModal">&times;</span>
+      <h2>Seu cadastro foi realizado com sucesso!</h2>
+      <div class="success-icon">✓</div>
+      <div class="request-id" id="modalRequestId"></div>
+      <p>Você já pode fazer login</p>
+      <button id="confirmButton">LOGIN</button>
+    </div>
+  </div>
+
+  <!-- Modal de Erro -->
+  <div id="errorModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" id="closeErrorModal">&times;</span>
+        <h2>Erro!</h2>
+        <p id="errorMessage"></p>
+    </div>
+  </div>
+
+  </div>
   <script type="module" src="../assets/js/main.js" defer></script>
 </body>
 

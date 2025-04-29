@@ -35,6 +35,7 @@ export const DomUtils = {
             });
         }
     },
+
     // Função para pegar os valores do formulário
     getFormValues(formId) {
         const form = document.getElementById(formId);
@@ -109,11 +110,49 @@ export const DomUtils = {
         alert(message || "Ocorreu um erro! Tente novamente.");
     }
 };
+
+// Função para exibir mensagens no DOM
 export function showMessage(container, message, isError = false) {
     container.textContent = message;
     container.style.color = isError ? 'red' : 'green';
 }
 
+// Função para limpar o formulário
 export function clearForm(form) {
     form.reset();
 };
+
+// Função para mostrar o modal de sucesso
+export function showSuccessModal(userId = '') {
+    const modal = document.getElementById('confirmationModal');
+    if (!modal) return;
+
+    const requestIdElement = document.getElementById('modalRequestId');
+    requestIdElement.textContent = userId ? `ID do usuário: ${userId}` : '';
+
+    modal.style.display = 'block';
+
+    // Botão "LOGIN" no modal redireciona para página de login
+    const confirmBtn = document.getElementById('confirmButton');
+    if (confirmBtn) {
+        confirmBtn.onclick = () => {
+            modal.style.display = 'none';
+            window.location.href = '../login.html'; // ajuste conforme seu projeto
+        };
+    }
+
+    // Fecha modal ao clicar no "X"
+    const closeBtn = modal.querySelector('.close-modal');
+    if (closeBtn) {
+        closeBtn.onclick = () => {
+            modal.style.display = 'none';
+        };
+    }
+
+    // Fecha modal ao clicar fora
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.style.display = 'none';
+        }
+    };
+}

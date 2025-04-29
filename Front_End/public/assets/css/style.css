@@ -275,8 +275,70 @@ footer p {
     padding: 30px 20px;
   }
 }
+.a-box-inner {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid #f0c14b;
+  background-color: #fff8dc;
+  border-radius: 4px;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.a-alert-container {
+  color: #111;
+  font-size: 14px;
+}
+
+.a-icon {
+  margin-right: 8px;
+  color: #a94442;
+  font-size: 18px;
+}
+
+.a-icon-alert::before {
+  content: "⚠️";
+}
+
+.hidden {
+  display: none;
+}
+
+
+#passwordMessage {
+  font-size: 12px;
+  color: red;
+  margin-top: 5px;
+}
+
+
+#passwordMessage.red {
+  color: red;
+}
+
+#passwordMessage.green {
+  color: green;
+}
+
+.input-error {
+  border: 2px solid red !important;
+  outline: none;
+}
+.required-label::after {
+  content: ' *';
+  color: rgb(82, 80, 80);
+}
+
+.required-label.filled::after {
+  content: '';
+}
 
 /* Estilos do Modal */
+.modal.show {
+  display: block; /* Garante que o modal seja exibido quando a classe 'show' for adicionada */
+}
+
 .modal {
   display: none;
   position: fixed;
@@ -356,4 +418,30 @@ footer p {
   to {
     opacity: 1;
   }
+}
+
+/* Modal de Erro */
+#errorModal .modal-content {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+#errorModal .close-modal {
+  color: #721c24;
+}
+
+#errorModal .btn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 12px 30px;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+#errorModal .btn:hover {
+  background-color: #c82333;
 }

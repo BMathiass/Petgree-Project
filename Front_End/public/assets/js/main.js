@@ -1,6 +1,7 @@
 import { FormController } from './controllers/formController.js';
 import { DomUtils } from './utils/domUtils.js';
-import { handleRegister, handleLogin } from './controllers/authController.js';
+import { handleRegister, handleLogin, validatePasswords } from './controllers/authController.js';
+import { setupRequiredAsterisk } from './utils/formUtils.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -24,4 +25,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     new FormController('formContato');
     DomUtils.setupInputMasks();
+
+    // Configuração do modal de cadastro (confirmationModal)
+    const confirmationModal = document.getElementById('confirmationModal');
+    const closeRegisterModalBtn = confirmationModal?.querySelector('.close-modal');
+    const confirmButton = document.getElementById('confirmButton');
+
+    if (closeRegisterModalBtn) {
+        closeRegisterModalBtn.addEventListener('click', () => {
+            confirmationModal.classList.remove('show');
+        });
+    }
+
+    if (confirmButton) {
+        confirmButton.addEventListener('click', () => {
+            window.location.href = 'login.html'; // ajuste o caminho se necessário
+        });
+    }
+
+    validatePasswords();
+
+    setupRequiredAsterisk();
 });
