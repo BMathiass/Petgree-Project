@@ -22,6 +22,26 @@ class ApiService {
             throw error;
         }
     }
+
+    async loginUser(email, senha) {
+        const response = await fetch(`${this.baseURL}/api/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, senha }),
+        });
+
+        return response.json();
+    }
+
+    async registerUser(data) {
+        const response = await fetch(`${this.baseURL}/api/auth/register`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
+
+        return response.json();
+    }
 }
 
 export const apiService = new ApiService();

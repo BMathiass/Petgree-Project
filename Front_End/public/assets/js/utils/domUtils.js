@@ -109,3 +109,11 @@ export const DomUtils = {
         alert(message || "Ocorreu um erro! Tente novamente.");
     }
 };
+export function showMessage(container, message, isError = false) {
+    container.textContent = message;
+    container.style.color = isError ? 'red' : 'green';
+}
+
+export function clearForm(form) {
+    form.reset();
+};
