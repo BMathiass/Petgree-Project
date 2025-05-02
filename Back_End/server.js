@@ -4,6 +4,9 @@ const app = require('./modules/app');
 const formRoutes = require('./routes/formRoutes');
 const authRoutes = require('./routes/authRoutes');
 
+const userRoutes = require('./routes/userRoutes');
+app.use('/api/user', userRoutes);
+
 // Rotas
 app.use('/api/form', formRoutes);
 app.use('/api/auth', authRoutes);

@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const userModel = require('../models/userModel');
 const { validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken');
 
 exports.login = async (req, res) => {
     const { email, senha } = req.body;
@@ -10,20 +11,29 @@ exports.login = async (req, res) => {
     }
 
     try {
-        const user = await userModel.findUserByEmail(email);
+        const emailNormalizado = email.trim().toLowerCase();
+        const user = await userModel.findUserByEmail(emailNormalizado);
 
         if (!user) {
-            return res.status(404).json({ message: "Usuário não encontrado." });
+            return res.status(401).json({ message: "Credenciais inválidas." });
         }
 
         const senhaCorreta = await bcrypt.compare(senha, user.senha);
 
         if (!senhaCorreta) {
-            return res.status(401).json({ message: "Senha incorreta." });
+            return res.status(401).json({ message: "Credenciais inválidas." });
         }
+
+        const token = jwt.sign({
+            id: user.id,
+            nome: user.nome,
+            email: user.email
+          }, process.env.JWT_SECRET, { expiresIn: '1h' });
+          
 
         return res.status(200).json({
             message: "Login realizado com sucesso!",
+            token,
             user: {
                 id: user.id,
                 nome: user.nome,

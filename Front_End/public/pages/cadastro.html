@@ -32,10 +32,10 @@
     <div class="formulario">
       <h2 class="titleLogin">Criar conta</h2>
       <form id="formCadastro" method="post">
-        <label for="nome">Nome</label>
+        <label for="nome" class="required-label">Nome</label>
         <input type="text" class="dados" id="nome" name="nome" placeholder="Nome completo*" required>
 
-        <label for="cpf">CPF</label>
+        <label for="cpf" class="required-label">CPF</label>
         <input type="text" id="cpf" class="dados" name="cpf" required placeholder="_ _ _._ _ _-_ _">
 
         <label for="email" class="required-label">E-mail</label>
@@ -54,7 +54,7 @@
           <div class="a-alert-content">As senhas devem coincidir.</div>
         </div>
         
-        <label for="confirmaSenha">Confirme sua Senha</label>
+        <label for="confirmaSenha" class="required-label">Confirme sua Senha</label>
         <input type="password" class="dados" id="confirmaSenha" name="confirmaSenha" placeholder="Confirme sua senha*" required>
         <div id="passwordMessage"></div>
         <div id="passwordLengthAlert" class="a-box-inner a-alert-container hidden">
