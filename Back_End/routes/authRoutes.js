@@ -27,4 +27,4 @@ router.post('/register',
 
 router.post('/login', loginValidation, loginLimiter, validate, authController.login);
 
-module.exports = router;
+module.exports = router; 

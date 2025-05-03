@@ -156,6 +156,7 @@ export function showSuccessModal(userId = '') {
         }
     };
 }
+
 export function showErrorModal(message = 'Ocorreu um erro!') {
     const errorModal = document.getElementById('errorModal');
     const errorMessage = document.getElementById('errorMessage');

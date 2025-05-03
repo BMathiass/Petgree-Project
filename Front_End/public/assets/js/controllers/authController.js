@@ -1,5 +1,5 @@
 import { apiService } from '../services/apiServices.js';
-import { showMessage, clearForm,showErrorModal } from '../utils/domUtils.js';
+import { showMessage, clearForm, showErrorModal } from '../utils/domUtils.js';
 import { getLoginFormData, getRegisterFormData } from '../utils/authUtils.js';
 
 export async function handleRegister(event) {
@@ -211,13 +211,18 @@ export async function handleLogin(event) {
     }
 
     // Fechar o modal de erro apenas ao clicar no X
-    const closeModalXBtn = document.querySelector('#closeErrorModal');
-
-    if (closeModalXBtn) {
+    
+    if (closeModalXBtn && errorModal) {
         closeModalXBtn.onclick = () => {
-            errorModal.classList.remove('show'); // Esconde o modal de erro
+          errorModal.classList.remove('show');
         };
-    }
+    
+        window.onclick = (event) => {
+          if (event.target === errorModal) {
+            errorModal.classList.remove('show');
+          }
+        };
+      }
 
     // Sempre garantir que o modal de erro seja visível se houver um erro
     setTimeout(() => {
