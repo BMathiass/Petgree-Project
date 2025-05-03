@@ -159,12 +159,24 @@ export function validatePasswords() {
 
 export async function handleLogin(event) {
     event.preventDefault();
+    console.log("handleLogin disparado"); // teste
     const form = event.target;
     if (!form) return;
 
     const messageContainer = document.querySelector('#loginMessage');
     const errorModal = document.getElementById('errorModal'); // Selecionando o modal de erro
     const errorMessage = document.getElementById('errorMessage'); // Selecionando a mensagem de erro
+
+    // Verifique se o messageContainer está presente no DOM
+    if (!messageContainer) {
+        console.error('Erro: messageContainer não encontrado no DOM');
+        return;
+    }
+
+    if (!errorModal || !errorMessage) {
+        console.error('Erro: O modal ou a mensagem de erro não foram encontrados no DOM');
+        return;
+    }
 
     const { email, senha } = getLoginFormData(form);
 
@@ -211,23 +223,24 @@ export async function handleLogin(event) {
     }
 
     // Fechar o modal de erro apenas ao clicar no X
-    
-    if (closeModalXBtn && errorModal) {
+    const closeModalXBtn = document.querySelector('#closeErrorModal');
+    if (closeModalXBtn) {
         closeModalXBtn.onclick = () => {
-          errorModal.classList.remove('show');
-        };
-    
-        window.onclick = (event) => {
-          if (event.target === errorModal) {
             errorModal.classList.remove('show');
-          }
         };
-      }
+    }
+
+    // Fechar o modal ao clicar fora dele
+    window.onclick = (event) => {
+        if (event.target === errorModal) {
+            errorModal.classList.remove('show');
+        }
+    };
 
     // Sempre garantir que o modal de erro seja visível se houver um erro
     setTimeout(() => {
         if (errorModal.classList.contains('show')) {
             errorModal.classList.remove('show');
         }
-    }, 6000);
+    }, 6000); // Esconde o modal de erro após 6 segundos
 }
