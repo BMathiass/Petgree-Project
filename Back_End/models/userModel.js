@@ -2,6 +2,7 @@ const db = require('../config/database');
 
 // Busca usuário pelo e-mail
 exports.findUserByEmail = (email) => {
+    email = email.trim().toLowerCase(); 
     return new Promise((resolve, reject) => {
         const query = 'SELECT * FROM usuarios WHERE email = $1';
         db.query(query, [email], (err, results) => {
@@ -31,6 +32,7 @@ exports.findUserByCpf = (cpf) => {
 // Cria novo usuário
 exports.createUser = (nome, cpf, email, senha, telefone, ofertas) => {
     return new Promise(async (resolve, reject) => {
+        email = email.trim().toLowerCase(); 
         try {
             // Verificar se o e-mail ou CPF já estão cadastrados
             const existingUserByEmail = await this.findUserByEmail(email);

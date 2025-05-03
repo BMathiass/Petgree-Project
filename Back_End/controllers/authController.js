@@ -60,23 +60,24 @@ exports.register = async (req, res) => {
     }
 
     const { nome, cpf, email, senha, confirmaSenha, telefone, ofertas, politicas } = req.body;
+    const emailNormalizado = email.trim().toLowerCase();
 
     if (senha !== confirmaSenha) {
-        logger.warn(`Senhas não conferem para o email: ${email}`);
+        logger.warn(`Senhas não conferem para o email: ${emailNormalizado}`);
         return res.status(400).json({ message: "As senhas não conferem." });
     }
 
     if (!politicas) {
-        logger.warn(`Tentativa de cadastro sem aceitar políticas - email: ${email}`);
+        logger.warn(`Tentativa de cadastro sem aceitar políticas - email: ${emailNormalizado}`);
         return res.status(400).json({ message: "Você deve aceitar as políticas para continuar." });
     }
 
     try {
-        const existingEmail = await userModel.findUserByEmail(email);
+        const existingEmail = await userModel.findUserByEmail(emailNormalizado);
         const existingCpf = await userModel.findUserByCpf(cpf);
 
         if (existingEmail || existingCpf) {
-            logger.warn(`Tentativa de cadastro com dados já existentes: ${email}, ${cpf}`);
+            logger.warn(`Tentativa de cadastro com dados já existentes: ${emailNormalizado}, ${cpf}`);
             return res.status(400).json({
                 message: "Email ou CPF já cadastrado. Faça login."
             });
@@ -85,16 +86,16 @@ exports.register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(senha, 10);
         const ofertasFinal = ofertas ? 'S' : 'N';
 
-        const newUser = await userModel.createUser(nome, cpf, email, hashedPassword, telefone, ofertasFinal);
+        const newUser = await userModel.createUser(nome, cpf, emailNormalizado, hashedPassword, telefone, ofertasFinal);
 
-        logger.info(`Novo usuário cadastrado com sucesso: ${email}`);
+        logger.info(`Novo usuário cadastrado com sucesso: ${emailNormalizado}`);
 
         res.status(200).json({
             message: "Usuário cadastrado com sucesso!",
             nome: newUser.nome
         });
     } catch (error) {
-        logger.error(`Erro ao cadastrar usuário ${email}: ${error.message}`);
+        logger.error(`Erro ao cadastrar usuário ${emailNormalizado}: ${error.message}`);
         res.status(500).json({ message: "Erro no cadastro." });
     }
 };
