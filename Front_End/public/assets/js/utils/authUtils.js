@@ -1,8 +1,11 @@
-// utils/authUtils.js
 export function getLoginFormData(form) {
-    const email = form.querySelector('input[name="email"]').value.trim();
-    const senha = form.querySelector('input[name="senha"]').value.trim();
-    return { email, senha };
+    const email = form.querySelector('#email');
+    const senha = form.querySelector('#senha');
+
+    return {
+        email: email?.value.trim() || '',
+        senha: senha?.value || ''
+    };
 }
 
 export function getRegisterFormData(form) {

@@ -156,3 +156,27 @@ export function showSuccessModal(userId = '') {
         }
     };
 }
+export function showErrorModal(message = 'Ocorreu um erro!') {
+    const errorModal = document.getElementById('errorModal');
+    const errorMessage = document.getElementById('errorMessage');
+    const closeModalBtn = document.getElementById('closeErrorModal');
+
+    if (!errorModal || !errorMessage || !closeModalBtn) return;
+
+    errorMessage.textContent = message;
+    errorModal.classList.add('show');
+
+    closeModalBtn.onclick = () => {
+        errorModal.classList.remove('show');
+    };
+
+    window.onclick = (event) => {
+        if (event.target === errorModal) {
+            errorModal.classList.remove('show');
+        }
+    };
+
+    setTimeout(() => {
+        errorModal.classList.remove('show');
+    }, 6000);
+}

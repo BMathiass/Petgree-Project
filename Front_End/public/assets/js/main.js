@@ -46,4 +46,20 @@ document.addEventListener('DOMContentLoaded', () => {
     validatePasswords();
 
     setupRequiredAsterisk();
+
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if (token && user) {
+        document.getElementById('authButtons').style.display = 'none';
+        document.getElementById('userWelcome').style.display = 'block';
+        document.getElementById('bemVindoUsuario').textContent = `Olá, ${user.nome}!`;
+
+        document.getElementById('logoutBtn').addEventListener('click', () => {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            location.reload(); // recarrega a página para refletir logout
+        });
+    }
+
 });

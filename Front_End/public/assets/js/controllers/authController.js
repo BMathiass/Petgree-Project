@@ -1,5 +1,5 @@
 import { apiService } from '../services/apiServices.js';
-import { showMessage, clearForm } from '../utils/domUtils.js';
+import { showMessage, clearForm,showErrorModal } from '../utils/domUtils.js';
 import { getLoginFormData, getRegisterFormData } from '../utils/authUtils.js';
 
 export async function handleRegister(event) {
@@ -98,7 +98,7 @@ export async function handleRegister(event) {
     }
 
     // Fechar o modal de erro apenas ao clicar no X
-    const closeModalXBtn = document.querySelector('#closeModalX');
+    const closeModalXBtn = document.querySelector('#closeErrorModal');
 
     if (closeModalXBtn) {
         closeModalXBtn.onclick = () => {
@@ -145,6 +145,8 @@ export function validatePasswords() {
         }
     };
 
+    if (!passwordInput || !confirmPasswordInput) return;
+
     passwordInput.addEventListener('input', () => {
         checkPasswordLength();
         checkPasswordMatch();
@@ -158,7 +160,11 @@ export function validatePasswords() {
 export async function handleLogin(event) {
     event.preventDefault();
     const form = event.target;
+    if (!form) return;
+
     const messageContainer = document.querySelector('#loginMessage');
+    const errorModal = document.getElementById('errorModal'); // Selecionando o modal de erro
+    const errorMessage = document.getElementById('errorMessage'); // Selecionando a mensagem de erro
 
     const { email, senha } = getLoginFormData(form);
 
@@ -171,17 +177,52 @@ export async function handleLogin(event) {
         const response = await apiService.loginUser(email, senha);
         if (response && response.message) {
             if (response.message.includes('sucesso')) {
-                showMessage(messageContainer, response.message, false);
-                clearForm(form);
-                // Redirecionar ou realizar outras ações após login bem-sucedido
+                // Salva token e dados do usuário localmente
+                localStorage.setItem('token', response.token);
+                localStorage.setItem('user', JSON.stringify(response.user));
+
+                // Redireciona para dashboard
+                window.location.href = '../index.html';
             } else {
                 showMessage(messageContainer, response.message, true);
+                // Exibe o modal de erro
+                errorMessage.textContent = response.message || 'Ocorreu um erro ao realizar login.';
+                errorModal.classList.add('show'); // Ativa o modal de erro
             }
         } else {
             showMessage(messageContainer, 'Erro ao realizar login.', true);
+            // Exibe o modal de erro
+            errorMessage.textContent = 'Erro ao realizar login.';
+            errorModal.classList.add('show'); // Ativa o modal de erro
         }
     } catch (error) {
         console.error(error);
         showMessage(messageContainer, 'Erro ao realizar login.', true);
+
+        // Verificando a mensagem de erro
+        if (error.message.includes('Credenciais inválidas')) {
+            errorMessage.textContent = 'Email ou senha incorretos.';
+        } else {
+            errorMessage.textContent = 'Erro ao realizar login.';
+        }
+
+        // Exibe o modal de erro
+        errorModal.classList.add('show'); // Ativa o modal de erro
     }
+
+    // Fechar o modal de erro apenas ao clicar no X
+    const closeModalXBtn = document.querySelector('#closeErrorModal');
+
+    if (closeModalXBtn) {
+        closeModalXBtn.onclick = () => {
+            errorModal.classList.remove('show'); // Esconde o modal de erro
+        };
+    }
+
+    // Sempre garantir que o modal de erro seja visível se houver um erro
+    setTimeout(() => {
+        if (errorModal.classList.contains('show')) {
+            errorModal.classList.remove('show');
+        }
+    }, 6000);
 }
