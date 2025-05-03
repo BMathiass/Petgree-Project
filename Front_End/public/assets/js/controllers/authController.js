@@ -111,7 +111,7 @@ export async function handleRegister(event) {
         if (errorModal.classList.contains('show')) {
             errorModal.classList.remove('show');
         }
-    }, 6000); // Esconde o modal de erro após 3 segundos (ajuste conforme necessidade)
+    }, 10000); // Esconde o modal de erro após 3 segundos (ajuste conforme necessidade)
 }
 
 export function validatePasswords() {
@@ -242,5 +242,5 @@ export async function handleLogin(event) {
         if (errorModal.classList.contains('show')) {
             errorModal.classList.remove('show');
         }
-    }, 6000); // Esconde o modal de erro após 6 segundos
+    }, 10000); // Esconde o modal de erro após 6 segundos
 }

@@ -179,5 +179,5 @@ export function showErrorModal(message = 'Ocorreu um erro!') {
 
     setTimeout(() => {
         errorModal.classList.remove('show');
-    }, 6000);
+    }, 10000);
 }
