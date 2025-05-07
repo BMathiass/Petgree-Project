@@ -56,7 +56,6 @@ export const DomUtils = {
     setupFormSubmit(formId, callback) {
         const form = document.getElementById(formId);
         if (!form) {
-            console.error(`Formulário ${formId} não existe no DOM!`);
             return;
         }
 
