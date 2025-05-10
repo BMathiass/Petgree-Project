@@ -2,6 +2,8 @@ const { createLogger, format, transports } = require('winston');
 const path = require('path');
 const fs = require('fs');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 // Garante que a pasta "logs" exista
 const logDir = path.join(__dirname, '..', 'logs');
 if (!fs.existsSync(logDir)) {
@@ -9,8 +11,9 @@ if (!fs.existsSync(logDir)) {
 }
 
 const logger = createLogger({
-    level: 'info', // níveis: error, warn, info, http, verbose, debug, silly
+    level: 'info',
     format: format.combine(
+        !isProduction && format.colorize(), // Cor no terminal em dev
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         format.printf(({ timestamp, level, message }) => {
             return `[${timestamp}] ${level.toUpperCase()}: ${message}`;
@@ -18,15 +21,17 @@ const logger = createLogger({
     ),
     transports: [
         new transports.Console(),
-        new transports.File({ filename: path.join(logDir, 'app.log') }),
-        new transports.File({ filename: path.join(logDir, 'errors.log'), level: 'error' })
+        ...(isProduction ? [
+            new transports.File({ filename: path.join(logDir, 'app.log') }),
+            new transports.File({ filename: path.join(logDir, 'errors.log'), level: 'error' })
+        ] : [])
     ],
-    exceptionHandlers: [
+    exceptionHandlers: isProduction ? [
         new transports.File({ filename: path.join(logDir, 'exceptions.log') })
-    ],
-    rejectionHandlers: [
+    ] : [],
+    rejectionHandlers: isProduction ? [
         new transports.File({ filename: path.join(logDir, 'rejections.log') })
-    ]
+    ] : []
 });
 
 module.exports = logger;
