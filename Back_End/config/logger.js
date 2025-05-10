@@ -4,7 +4,6 @@ const fs = require('fs');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-// Garante que a pasta "logs" exista
 const logDir = path.join(__dirname, '..', 'logs');
 if (!fs.existsSync(logDir)) {
     fs.mkdirSync(logDir);
@@ -13,7 +12,7 @@ if (!fs.existsSync(logDir)) {
 const logger = createLogger({
     level: 'info',
     format: format.combine(
-        !isProduction && format.colorize(), // Cor no terminal em dev
+        ...(!isProduction ? [format.colorize()] : []), // Correção aplicada
         format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
         format.printf(({ timestamp, level, message }) => {
             return `[${timestamp}] ${level.toUpperCase()}: ${message}`;
