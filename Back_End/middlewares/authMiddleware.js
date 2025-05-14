@@ -1,23 +1,27 @@
 const jwt = require('jsonwebtoken');
 
-const authMiddleware = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-
-  if (!authHeader?.startsWith('Bearer ')) {
-    return res.status(401).json({ message: 'Token não fornecido.' });
-  }
-
-  const token = authHeader.split(' ')[1];
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      const isExpired = err.name === 'TokenExpiredError';
-      return res.status(403).json({ message: isExpired ? 'Token expirado.' : 'Token inválido.' });
+const authMiddleware = (roles = []) => {
+  return (req, res, next) => {
+    const authHeader = req.headers.authorization;
+    if (!authHeader?.startsWith('Bearer ')) {
+      return res.status(401).json({ message: 'Token não fornecido.' });
     }
 
-    req.user = decoded; // Pode conter ID, email, role, etc.
-    next();
-  });
+    const token = authHeader.split(' ')[1];
+
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+      if (roles.length > 0 && !roles.includes(decoded.role)) {
+        return res.status(403).json({ message: 'Acesso negado.' });
+      }
+
+      req.user = decoded;
+      next();
+    } catch (err) {
+      return res.status(403).json({ message: 'Token inválido ou expirado.' });
+    }
+  };
 };
 
 module.exports = authMiddleware;

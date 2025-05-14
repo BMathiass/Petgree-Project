@@ -31,7 +31,8 @@ exports.login = async (req, res) => {
         const token = jwt.sign({
             id: user.id,
             nome: user.nome,
-            email: user.email
+            email: user.email,
+            role: user.role
         }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
         logger.info(`Login bem-sucedido para ${emailNormalizado} | IP: ${req.ip} | User-Agent: ${req.headers['user-agent']}`);
@@ -42,7 +43,8 @@ exports.login = async (req, res) => {
             user: {
                 id: user.id,
                 nome: user.nome,
-                email: user.email
+                email: user.email,
+                role: user.role
             }
         });
     } catch (error) {

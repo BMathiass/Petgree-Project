@@ -31,7 +31,8 @@ const logger = createLogger({
     ] : [],
     rejectionHandlers: isProduction ? [
         new transports.File({ filename: path.join(logDir, 'rejections.log') })
-    ] : []
+    ] : [],
+    exitOnError: isProduction 
 });
 
 module.exports = logger;
