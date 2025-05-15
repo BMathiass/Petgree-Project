@@ -73,13 +73,24 @@ class ApiService {
         return await res.json(); // { results, currentPage, totalPages }
     }
 
-    async getUsers(token) {
-        const res = await fetch(`${this.baseURL}/api/admin/users`, {
+    async getUsers(token, page = 1, limit = 10) {
+        const res = await fetch(`${this.baseURL}/api/admin/users?page=${page}&limit=${limit}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
-        if (!res.ok) throw new Error('Erro ao buscar usuários');
+        if (!res.ok) {
+            if (res.status === 401 || res.status === 403) {
+                localStorage.removeItem('token');
+                alert('Sessão expirada. Faça login novamente.');
+                window.location.href = '/login.html';
+                return;
+            }
+
+            const errorText = await res.text();
+            console.error('Erro ao buscar usuários:', errorText);
+            throw new Error('Erro ao buscar usuários');
+        }
+
         const data = await res.json();
-        console.log('getUsers data:', data); // <-- DEBUG
         return data;
     }
 

@@ -724,3 +724,8 @@ button:hover {
     color: white;
     font-weight: bold;
 }
+button.ativo {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}
