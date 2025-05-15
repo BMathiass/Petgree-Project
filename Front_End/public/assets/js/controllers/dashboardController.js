@@ -1,6 +1,33 @@
 import { apiService } from '../services/apiServices.js';
 import { getToken } from '../utils/authUtils.js';
 
+let currentPage = 1;
+
+async function carregarMensagens(page = 1) {
+    currentPage = page;
+    try {
+        const token = getToken();
+        const data = await apiService.getMessages(token, page);
+        renderMessages(data.results);
+        renderPaginacao(data.currentPage, data.totalPages);
+    } catch (err) {
+        console.error("Erro ao carregar mensagens:", err);
+    }
+}
+
+function renderPaginacao(currentPage, totalPages) {
+    const paginacaoContainer = document.getElementById('pagination');
+    paginacaoContainer.innerHTML = '';
+
+    for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        btn.className = i === currentPage ? 'active' : '';
+        btn.onclick = () => carregarMensagens(i);
+        paginacaoContainer.appendChild(btn);
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     const token = getToken();
     if (!token) {
@@ -10,19 +37,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        const [messages, users] = await Promise.all([
-            apiService.getMessages(token),
-            apiService.getUsers(token)
-        ]);
-        renderMessages(messages.results || []);
-        renderUsers(users.results || []);  // <-- ajustado aqui
+        await carregarMensagens();
+        const users = await apiService.getUsers(token);
+        renderUsers(users.results || []);
     } catch (error) {
         console.error('Erro ao carregar dados:', error);
         alert(`Erro ao carregar dados do dashboard:\n${error.message || error}`);
     }
-
-
-
 
     document.getElementById('createUserForm')?.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -67,10 +88,10 @@ function renderMessages(messages) {
             </div>
         `;
         list.appendChild(card);
-        
+
         const deleteButton = card.querySelector('.delete-btn');
         deleteButton.addEventListener('click', async () => {
-            const token = localStorage.getItem('token');
+            const token = getToken();
             if (!token) {
                 alert('Token não encontrado. Faça login novamente.');
                 return;
@@ -78,12 +99,12 @@ function renderMessages(messages) {
 
             try {
                 await apiService.excluirMensagem(msg.id_solicitacao, token);
+                await carregarMensagens(currentPage);
             } catch (err) {
                 console.error(err);
                 alert('Erro ao excluir mensagem');
             }
         });
-
     });
 }
 
@@ -93,19 +114,19 @@ function renderUsers(users) {
     users.forEach(user => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-      <td><input value="${user.nome}" id="nome-${user.id_usuario}"/></td>
-      <td><input value="${user.email}" id="email-${user.id_usuario}"/></td>
-      <td>
-        <select id="role-${user.id_usuario}">
-          <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>admin</option>
-          <option value="user" ${user.role === 'user' ? 'selected' : ''}>user</option>
-        </select>
-      </td>
-      <td>
-        <button onclick="editarUsuario(${user.id_usuario})">Salvar</button>
-        <button onclick="excluirUsuario(${user.id_usuario})">Excluir</button>
-      </td>
-    `;
+            <td><input value="${user.nome}" id="nome-${user.id_usuario}"/></td>
+            <td><input value="${user.email}" id="email-${user.id_usuario}"/></td>
+            <td>
+                <select id="role-${user.id_usuario}">
+                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>admin</option>
+                    <option value="user" ${user.role === 'user' ? 'selected' : ''}>user</option>
+                </select>
+            </td>
+            <td>
+                <button onclick="editarUsuario(${user.id_usuario})">Salvar</button>
+                <button onclick="excluirUsuario(${user.id_usuario})">Excluir</button>
+            </td>
+        `;
         tbody.appendChild(tr);
     });
 }

@@ -540,16 +540,6 @@ h2 {
   background: #e657c9;
 }
 
-
-
-
-
-
-
-
-
-
-
 table {
   width: 100%;
   border-collapse: collapse;
@@ -729,3 +719,8 @@ button:hover {
   color: #555;
 }
 
+.pagination-container button.active {
+    background-color: #007bff;
+    color: white;
+    font-weight: bold;
+}

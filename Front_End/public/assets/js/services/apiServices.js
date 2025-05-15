@@ -59,19 +59,18 @@ class ApiService {
     }
 
     // Métodos do Dashboard (com token)
-    async getMessages(token) {
-        const res = await fetch(`${this.baseURL}/api/admin/messages`, {
+    async getMessages(token, page = 1, limit = 10) {
+        const res = await fetch(`${this.baseURL}/api/admin/messages?page=${page}&limit=${limit}`, {
             headers: { Authorization: `Bearer ${token}` },
         });
-        console.log('getMessages response status:', res.status);
+
         if (!res.ok) {
             const errorText = await res.text();
             console.error('Erro ao buscar mensagens:', errorText);
             throw new Error('Erro ao buscar mensagens');
         }
-        const data = await res.json();
-        console.log('getMessages data:', data);
-        return data;
+
+        return await res.json(); // { results, currentPage, totalPages }
     }
 
     async getUsers(token) {
