@@ -20,3 +20,7 @@ export function getRegisterFormData(form) {
 
     return { nome, cpf, email, telefone, senha, confirmaSenha, ofertas, politicas };
 }
+
+export function getToken() {
+  return localStorage.getItem('token');
+}

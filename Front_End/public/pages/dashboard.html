@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="../assets/css/style.css" />
+</head>
+<body>
+  <h1>Dashboard Admin</h1>
+    
+  <div class="tabs">
+  <button class="tab-button active" data-tab="mensagensTab">Mensagens</button>
+  <button class="tab-button" data-tab="usuariosTab">Usuários</button>
+</div>
+
+<div id="mensagensTab" class="tab-content active">
+  <section id="messagesSection">
+    <h2>Mensagens Recebidas</h2>
+    <div id="messagesList" class="message-grid"></div>
+  </section>
+  <div id="pagination" class="pagination-container"></div>
+</div>
+
+<div id="usuariosTab" class="tab-content">
+  <section id="usersSection">
+    <h2>Gerenciar Usuários</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nome</th>
+          <th>Email</th>
+          <th>Papel</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="usersTableBody"></tbody>
+    </table>
+  </section>
+  <div id="paginacao-usuarios" class="pagination-container"></div>
+
+  <section id="createUserSection">
+    <h2>Criar Novo Usuário</h2>
+    <form id="createUserForm">
+      <input type="text" id="newNome" placeholder="Nome" required />
+      <input type="email" id="newEmail" placeholder="Email" required />
+      <input type="password" id="newSenha" placeholder="Senha" required />
+      <select id="newRole">
+        <option value="user">user</option>
+        <option value="admin">admin</option>
+      </select>
+      <button type="submit">Criar Usuário</button>
+    </form>
+  </section>
+</div>
+
+  <script type="module" src="../assets/js/controllers/dashboardController.js" defer></script>
+</body>
+</html>
