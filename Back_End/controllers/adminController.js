@@ -6,7 +6,6 @@ const getMessages = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
   const page = parseInt(req.query.page) || 1;
   const offset = (page - 1) * limit;
-  //const offset = parseInt(req.query.offset) || 0;
   const search = req.query.search || '';
 
   try {
@@ -46,7 +45,8 @@ const deleteMessage = async (req, res) => {
 
 const getUsers = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
-  const offset = parseInt(req.query.offset) || 0;
+  const page = parseInt(req.query.page) || 1;
+  const offset = (page - 1) * limit;
   const search = req.query.search || '';
 
   try {
@@ -65,9 +65,13 @@ const getUsers = async (req, res) => {
       WHERE nome ILIKE $1 OR email ILIKE $1 OR cpf ILIKE $1
     `, [`%${search}%`]);
 
+    const total = parseInt(countResult.rows[0].count);
+
     res.json({
-      total: parseInt(countResult.rows[0].count),
-      results: result.rows
+      total,
+      results: result.rows,
+      currentPage: page,
+      totalPages: Math.ceil(total / limit)
     });
   } catch (err) {
     console.error('Erro ao buscar usuários:', err);
