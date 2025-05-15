@@ -9,5 +9,6 @@ router.delete('/message/:id', authMiddleware(['admin']), adminController.deleteM
 router.get('/users', authMiddleware(['admin']), adminController.getUsers);
 router.put('/user/:id', authMiddleware(['admin']), adminController.updateUser);
 router.post('/user', authMiddleware(['admin']), adminController.createUser);
+router.delete('/user/:id', authMiddleware(['admin']), adminController.deleteUser);
 
 module.exports = router;
