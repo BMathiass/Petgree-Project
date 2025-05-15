@@ -45,10 +45,10 @@ exports.createUser = (nome, cpf, email, senha, telefone, ofertas) => {
                 return reject('Este CPF já está cadastrado.');
             }
 
-            // Se não encontrar nenhum usuário com o mesmo e-mail ou CPF, cria o novo usuário
+            // Criação do novo usuário com role fixo como 'user'
             const query = `
-                INSERT INTO usuarios (nome, cpf, email, senha, telefone, ofertas)
-                VALUES ($1, $2, $3, $4, $5, $6)
+                INSERT INTO usuarios (nome, cpf, email, senha, telefone, ofertas, role)
+                VALUES ($1, $2, $3, $4, $5, $6, 'user')
                 RETURNING nome
             `;
             db.query(query, [nome, cpf, email, senha, telefone, ofertas], (err, results) => {
