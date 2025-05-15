@@ -1,9 +1,12 @@
 const db = require('../config/database');
 const bcrypt = require('bcrypt');
+const logger = require('../config/logger');
 
 const getMessages = async (req, res) => {
   const limit = parseInt(req.query.limit) || 10;
-  const offset = parseInt(req.query.offset) || 0;
+  const page = parseInt(req.query.page) || 1;
+  const offset = (page - 1) * limit;
+  //const offset = parseInt(req.query.offset) || 0;
   const search = req.query.search || '';
 
   try {
@@ -24,7 +27,9 @@ const getMessages = async (req, res) => {
 
     res.json({
       total: parseInt(countResult.rows[0].count),
-      results: result.rows
+      results: result.rows,
+      currentPage: page,
+      totalPages: Math.ceil(countResult.rows[0].count / limit)
     });
   } catch (err) {
     console.error('Erro ao buscar mensagens:', err);
@@ -87,10 +92,24 @@ const createUser = async (req, res) => {
   res.status(201).json({ message: 'Usuário criado.' });
 };
 
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await db.query('DELETE FROM usuarios WHERE id_usuario = $1', [id]);
+    res.status(200).json({ message: 'Usuário apagado.' });
+    logger.info(`Admin ${req.user.email} deletou o usuário ID ${id}`);
+  } catch (err) {
+    console.error('Erro ao deletar usuário:', err);
+    res.status(500).json({ message: 'Erro ao deletar usuário' });
+  }
+};
+
 module.exports = {
   getMessages,
   deleteMessage,
   getUsers,
   updateUser,
-  createUser
+  createUser,
+  deleteUser
 };
