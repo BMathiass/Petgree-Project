@@ -159,7 +159,7 @@ export function validatePasswords() {
 
 export async function handleLogin(event) {
     event.preventDefault();
-    console.log("handleLogin disparado"); // teste
+
     const form = event.target;
     if (!form) return;
 

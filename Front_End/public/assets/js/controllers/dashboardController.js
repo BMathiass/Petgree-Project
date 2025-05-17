@@ -1,9 +1,12 @@
 import { apiService } from '../services/apiServices.js';
 import { getToken } from '../utils/authUtils.js';
 
-let currentPageMensagens = 1;
 let currentPageUsuarios = 1;
 const limitUsuarios = 10;
+let paginaAtualMensagens = 1;
+const limitMensagens = 15;
+let loadingMensagens = false;
+let allMensagensCarregadas = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = getToken();
@@ -14,7 +17,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     try {
-        await carregarMensagens();
+        await carregarMensagensDinamicamente();
         await carregarUsuarios();
     } catch (error) {
         console.error('Erro ao carregar dados do dashboard:', error);
@@ -26,24 +29,38 @@ document.addEventListener('DOMContentLoaded', async () => {
     configurarAbas();
 });
 
-async function carregarMensagens(page = 1) {
-    currentPageMensagens = page;
+async function carregarMensagensDinamicamente() {
+
+    if (loadingMensagens || allMensagensCarregadas) return;
+
+    loadingMensagens = true;
+
     try {
         const token = getToken();
-        const { results, currentPage, totalPages } = await apiService.getMessages(token, page);
-        renderizarMensagens(results);
-        renderizarPaginacaoMensagens(currentPage, totalPages);
+        const data = await apiService.getMessages(token, paginaAtualMensagens, limitMensagens);
+
+        if (!data || !data.results || !Array.isArray(data.results) || data.results.length === 0) {
+            allMensagensCarregadas = true;
+            return;
+        }
+
+        console.log('Mensagens recebidas:', data.results);
+        console.log('pagina atual: ', paginaAtualMensagens)
+        renderizarMensagens(data.results, true);
+        paginaAtualMensagens++;
     } catch (err) {
         console.error("Erro ao carregar mensagens:", err);
+    } finally {
+        loadingMensagens = false;
     }
 }
 
-function renderizarMensagens(mensagens) {
+function renderizarMensagens(mensagens, append = false) {
     const lista = document.getElementById('messagesList');
-    lista.innerHTML = '';
+    if (!append) lista.innerHTML = '';
 
     if (!mensagens || mensagens.length === 0) {
-        lista.innerHTML = '<p>Nenhuma mensagem encontrada.</p>';
+        if (!append) lista.innerHTML = '<p>Nenhuma mensagem encontrada.</p>';
         return;
     }
 
@@ -52,30 +69,33 @@ function renderizarMensagens(mensagens) {
         card.className = 'message-card';
         card.innerHTML = `
             <div class="message-header">
-                <span>${msg.nome}</span>
-                <span class="message-email">${msg.email}</span>
+                <strong>${msg.nome}</strong> <span class="message-email">${msg.email}</span>
             </div>
             <div class="message-body">${msg.mensagem}</div>
             <div class="message-actions">
+                <button class="responder-btn" data-email="${msg.email}" data-nome="${msg.nome}">Responder</button>
                 <button class="delete-btn" data-id="${msg.id_solicitacao}">Excluir</button>
-            </div>
-        `;
-        card.querySelector('.delete-btn').addEventListener('click', () => excluirMensagem(msg.id_solicitacao));
+            </div>`;
+
+        card.addEventListener('click', function (event) {
+            if (event.target.tagName === 'BUTTON') return;
+            this.classList.toggle('expanded');
+        });
+
+        card.querySelector('.delete-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            excluirMensagem(msg.id_solicitacao);
+        });
+
+        card.querySelector('.responder-btn').addEventListener('click', (e) => {
+            e.stopPropagation();
+            const email = e.target.dataset.email;
+            const nome = e.target.dataset.nome;
+            alert(`Abrir janela de resposta para ${nome} <${email}>`);
+        });
+
         lista.appendChild(card);
     });
-}
-
-function renderizarPaginacaoMensagens(paginaAtual, totalPaginas) {
-    const container = document.getElementById('pagination');
-    container.innerHTML = '';
-
-    for (let i = 1; i <= totalPaginas; i++) {
-        const btn = document.createElement('button');
-        btn.textContent = i;
-        btn.className = i === paginaAtual ? 'active' : '';
-        btn.onclick = () => carregarMensagens(i);
-        container.appendChild(btn);
-    }
 }
 
 async function excluirMensagem(id) {
@@ -87,7 +107,7 @@ async function excluirMensagem(id) {
 
     try {
         await apiService.excluirMensagem(id, token);
-        await carregarMensagens(currentPageMensagens);
+        await carregarMensagensDinamicamente();
     } catch (err) {
         console.error(err);
         alert('Erro ao excluir mensagem');
@@ -107,7 +127,7 @@ async function carregarUsuarios() {
 
 function renderizarUsuarios(users) {
     const tbody = document.getElementById('usersTableBody');
-    tbody.innerHTML = ''; // limpa tudo
+    tbody.innerHTML = '';
 
     users.forEach(user => {
         const tr = document.createElement('tr');
@@ -207,13 +227,44 @@ async function handleCreateUser(event) {
 }
 
 function configurarAbas() {
-    document.querySelectorAll('.tab-button').forEach(button => {
-        button.addEventListener('click', () => {
-            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+    const mensagensTab = document.getElementById('mensagensTab');
+    const usuariosTab = document.getElementById('usuariosTab');
+    const linkMensagens = document.getElementById('link-mensagens');
+    const linkUsuarios = document.getElementById('link-usuarios');
+    const linkLogout = document.getElementById('link-logout');
 
-            button.classList.add('active');
-            document.getElementById(button.dataset.tab).classList.add('active');
-        });
+    linkMensagens.addEventListener('click', (e) => {
+        e.preventDefault();
+        mensagensTab.classList.add('active');
+        usuariosTab.classList.remove('active');
+        linkMensagens.classList.add('active-link');
+        linkUsuarios.classList.remove('active-link');
+    });
+
+    linkUsuarios.addEventListener('click', (e) => {
+        e.preventDefault();
+        usuariosTab.classList.add('active');
+        mensagensTab.classList.remove('active');
+        linkUsuarios.classList.add('active-link');
+        linkMensagens.classList.remove('active-link');
+    });
+
+    linkLogout.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.setItem('logoutMessage', 'Logout realizado com sucesso!');
+        window.location.href = '../pages/login.html';
+    });
+
+    // Scroll infinito para mensagens
+    const mensagensContainer = document.getElementById('messagesList');
+    mensagensContainer.addEventListener('scroll', () => {
+        if (
+            mensagensContainer.scrollTop + mensagensContainer.clientHeight >=
+            mensagensContainer.scrollHeight - 50
+        ) {
+            carregarMensagensDinamicamente();
+        }
     });
 }

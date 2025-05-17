@@ -5,54 +5,66 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="../assets/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+
 </head>
+
 <body>
-  <h1>Dashboard Admin</h1>
-    
-  <div class="tabs">
-  <button class="tab-button active" data-tab="mensagensTab">Mensagens</button>
-  <button class="tab-button" data-tab="usuariosTab">Usuários</button>
-</div>
+  <div class="dashboard-container">
+    <div class="sidebar">
+      <ul class="menu-content">
+        <li><a href="../index.html"><span class="material-symbols-outlined">home</span>Home</a></li>
+        <li><a href="#" id="link-mensagens"><span class="material-symbols-outlined">report</span>Mensagens</a></li>
+        <li><a href="#" id="link-usuarios"><span class="material-symbols-outlined">person</span>Usuários</a></li>
+        <li><a href="#" id="link-logout"><span class="material-symbols-outlined">logout</span>Logout</a></li>
+      </ul>
 
-<div id="mensagensTab" class="tab-content active">
-  <section id="messagesSection">
-    <h2>Mensagens Recebidas</h2>
-    <div id="messagesList" class="message-grid"></div>
-  </section>
-  <div id="pagination" class="pagination-container"></div>
-</div>
+    </div>
 
-<div id="usuariosTab" class="tab-content">
-  <section id="usersSection">
-    <h2>Gerenciar Usuários</h2>
-    <table>
-      <thead>
-        <tr>
-          <th>Nome</th>
-          <th>Email</th>
-          <th>Papel</th>
-          <th>Ações</th>
-        </tr>
-      </thead>
-      <tbody id="usersTableBody"></tbody>
-    </table>
-  </section>
-  <div id="paginacao-usuarios" class="pagination-container"></div>
+    <div class="main-content">
+      <h1>Dashboard Admin</h1>
 
-  <section id="createUserSection">
-    <h2>Criar Novo Usuário</h2>
-    <form id="createUserForm">
-      <input type="text" id="newNome" placeholder="Nome" required />
-      <input type="email" id="newEmail" placeholder="Email" required />
-      <input type="password" id="newSenha" placeholder="Senha" required />
-      <select id="newRole">
-        <option value="user">user</option>
-        <option value="admin">admin</option>
-      </select>
-      <button type="submit">Criar Usuário</button>
-    </form>
-  </section>
-</div>
+      <div id="mensagensTab" class="tab-content active">
+        <section id="messagesSection">
+          <h2>Mensagens Recebidas</h2>
+          <div id="messagesList" class="message-grid"></div>
+        </section>
+        <div id="pagination" class="pagination-container"></div>
+      </div>
+
+      <div id="usuariosTab" class="tab-content">
+        <section id="usersSection">
+          <h2>Gerenciar Usuários</h2>
+          <table>
+            <thead>
+              <tr>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Papel</th>
+                <th>Ações</th>
+              </tr>
+            </thead>
+            <tbody id="usersTableBody"></tbody>
+          </table>
+        </section>
+        <div id="paginacao-usuarios" class="pagination-container"></div>
+
+        <section id="createUserSection">
+          <h2>Criar Novo Usuário</h2>
+          <form id="createUserForm">
+            <input type="text" id="newNome" placeholder="Nome" required />
+            <input type="email" id="newEmail" placeholder="Email" required />
+            <input type="password" id="newSenha" placeholder="Senha" required />
+            <select id="newRole">
+              <option value="user">user</option>
+              <option value="admin">admin</option>
+            </select>
+            <button type="submit">Criar Usuário</button>
+          </form>
+        </section>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="../assets/js/controllers/dashboardController.js" defer></script>
 </body>
