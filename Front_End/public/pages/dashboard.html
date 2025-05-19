@@ -3,9 +3,10 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard</title>
   <link rel="stylesheet" href="../assets/css/dashboard.css" />
+  <link rel="stylesheet" href="../assets/css/modal.css" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
 </head>
 
@@ -76,7 +77,25 @@
       </div>
     </div>
   </div>
+  <!-- Modal de Confirmação Genérico -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">Confirmar ação</h2>
+      <p id="modalRequestId">Tem certeza que deseja realizar esta ação?</p>
+      <div class="modal-actions">
+        <button id="cancelButton" class="btn btn-secondary">Cancelar</button>
+        <button id="confirmButton" class="btn btn-primary">Confirmar</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- Modal de Erro (já deve existir pelo seu código) -->
+  <div id="errorModal" class="modal">
+    <div class="modal-content">
+      <span id="closeErrorModal" class="close-modal">×</span>
+      <p id="errorMessage"></p>
+    </div>
+  </div>
   <script type="module" src="../assets/js/controllers/dashboardController.js" defer></script>
 </body>
 

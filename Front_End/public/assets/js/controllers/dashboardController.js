@@ -1,5 +1,6 @@
 import { apiService } from '../services/apiServices.js';
 import { getToken } from '../utils/authUtils.js';
+import { showModal, showError } from '../utils/modalUtils.js';
 
 let currentPageUsuarios = 1;
 const limitUsuarios = 13;
@@ -13,8 +14,8 @@ let allUsuariosCarregados = false;
 document.addEventListener('DOMContentLoaded', async () => {
     const token = getToken();
     if (!token) {
-        alert('Acesso negado. Faça login como administrador.');
-        window.location.href = '../pages/login.html';
+        showError('Acesso negado. Faça login como administrador.');
+        setTimeout(() => window.location.href = '../pages/login.html', 3000);
         return;
     }
 
@@ -23,7 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         await carregarUsuariosDinamicamente();
     } catch (error) {
         console.error('Erro ao carregar dados do dashboard:', error);
-        alert(`Erro ao carregar dados do dashboard:\n${error.message || error}`);
+        showError('errorModal', `Erro ao carregar dados do dashboard:\n${error.message || error}`);
     }
 
     const form = document.getElementById('createUserForm');
@@ -119,17 +120,63 @@ function renderizarMensagens(mensagens, append = false) {
 async function excluirMensagem(id) {
     const token = getToken();
     if (!token) {
-        alert('Token não encontrado. Faça login novamente.');
+        showError('errorModal', 'Token não encontrado. Faça login novamente.');
         return;
     }
 
-    try {
-        await apiService.excluirMensagem(id, token);
-        await carregarMensagensDinamicamente();
-    } catch (err) {
-        console.error(err);
-        alert('Erro ao excluir mensagem');
-    }
+    // Guarda a referência do card
+    const messageCard = document.querySelector(`.delete-btn[data-id="${id}"]`)?.closest('.message-card');
+
+    showModal(
+        'confirmationModal',
+        'Confirmar exclusão',
+        'Tem certeza que deseja excluir esta mensagem?',
+        async () => {
+            try {
+                await apiService.excluirMensagem(id, token);
+                
+                // Função para remover a mensagem
+                const removeMessageCard = () => {
+                    if (messageCard) {
+                        messageCard.style.opacity = '0';
+                        setTimeout(() => {
+                            messageCard.remove();
+                            
+                            document.getElementById('confirmationModal').classList.remove('show');
+                            
+                            // Verifica se precisa recarregar
+                            const lista = document.getElementById('messagesList');
+                            if (lista && lista.children.length === 0) {
+                                paginaAtualMensagens = 1;
+                                allMensagensCarregadas = false;
+                                carregarMensagensDinamicamente();
+                            }
+                        }, 300);
+                    }
+                };
+                
+                // Mostra o modal de sucesso
+                showModal(
+                    'confirmationModal',
+                    'Sucesso',
+                    'Mensagem excluída com sucesso!',
+                    removeMessageCard, // Executa ao clicar no OK
+                    true // Fecha automaticamente
+                );
+                
+                // Configura para remover também quando fechar automaticamente
+                setTimeout(removeMessageCard, 3000); // Mesmo tempo do auto-close
+                
+            } catch (err) {
+                console.error(err);
+                showError('errorModal', err.message || 'Erro ao excluir mensagem');
+            }
+        }
+    );
+
+    document.getElementById('cancelButton').onclick = () => {
+        document.getElementById('confirmationModal').classList.remove('show');
+    };
 }
 
 async function carregarUsuariosDinamicamente() {
@@ -256,43 +303,66 @@ async function editarUsuario(id) {
 
     try {
         await apiService.updateUser(id, { nome, email, role }, token);
-        alert('Usuário atualizado!');
+        showModal(
+            'confirmationModal',
+            'Sucesso',
+            'Usuário atualizado com sucesso!',
+            () => document.getElementById('confirmationModal').classList.remove('show')
+        );
         // Mantém o item expandido após edição
         const row = document.querySelector(`[data-id="${id}"]`).closest('.user-row');
         row.querySelector('.user-details').style.display = 'block';
     } catch (err) {
         console.error('Erro ao atualizar usuário:', err);
-        alert('Erro ao atualizar usuário');
+        showError('errorModal', 'Erro ao atualizar usuário');
     }
 }
 
 async function excluirUsuario(id) {
     const token = getToken();
-    if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
-
-    try {
-        await apiService.deleteUser(id, token);
-
-        // Remove visualmente o usuário da lista
-        const userRow = document.querySelector(`.btn-excluir[data-id="${id}"]`)?.closest('.user-row');
-        if (userRow) {
-            userRow.style.opacity = '0';
-            setTimeout(() => {
-                userRow.remove();
-
-                // Verifica se não há mais usuários e recarrega se necessário
-                if (document.getElementById('usersTableBody').children.length === 0) {
-                    currentPageUsuarios = 1;
-                    allUsuariosCarregados = false;
-                    carregarUsuariosDinamicamente();
-                }
-            }, 300); // Tempo para a animação de fade out
-        }
-
-    } catch (err) {
-        console.error('Erro ao excluir usuário:', err);
-        alert('Erro ao excluir usuário');
+    if (!token) {
+        showError('errorModal', 'Token não encontrado. Faça login novamente.');
+        return;
     }
+
+    // Mostra o modal de confirmação
+    showModal(
+        'confirmationModal',
+        'Confirmar exclusão',
+        'Tem certeza que deseja excluir este usuário?',
+        async () => {
+            try {
+                await apiService.deleteUser(id, token);
+
+                // Remove visualmente o usuário da lista
+                const userRow = document.querySelector(`.btn-excluir[data-id="${id}"]`)?.closest('.user-row');
+                if (userRow) {
+                    userRow.style.opacity = '0';
+                    setTimeout(() => {
+                        userRow.remove();
+
+                        // Verifica se não há mais usuários e recarrega se necessário
+                        if (document.getElementById('usersTableBody').children.length === 0) {
+                            currentPageUsuarios = 1;
+                            allUsuariosCarregados = false;
+                            carregarUsuariosDinamicamente();
+                        }
+                    }, 300);
+                }
+
+                // Fecha o modal após a confirmação
+                document.getElementById('confirmationModal').classList.remove('show');
+            } catch (err) {
+                console.error('Erro ao excluir usuário:', err);
+                showError('errorModal', 'Erro ao excluir usuário');
+            }
+        }
+    );
+
+    // Configura o botão de cancelar
+    document.getElementById('cancelButton').onclick = () => {
+        document.getElementById('confirmationModal').classList.remove('show');
+    };
 }
 
 async function handleCreateUser(event) {
@@ -305,11 +375,19 @@ async function handleCreateUser(event) {
 
     try {
         await apiService.createUser({ nome, email, senha, role }, token);
-        alert('Usuário criado com sucesso');
+        showModal(
+            'confirmationModal',
+            'Sucesso',
+            'Usuário criado com sucesso',
+            () => {
+                document.getElementById('confirmationModal').classList.remove('show');
+                window.location.reload();
+            }
+        );
         window.location.reload();
     } catch (err) {
         console.error('Erro ao criar usuário:', err);
-        alert('Erro ao criar usuário');
+        showError('errorModal', 'Erro ao criar usuário');
     }
 }
 
