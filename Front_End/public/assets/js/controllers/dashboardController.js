@@ -42,8 +42,14 @@ async function carregarMensagensDinamicamente() {
         const token = getToken();
         const data = await apiService.getMessages(token, paginaAtualMensagens, limitMensagens);
 
-        if (!data || !data.results || !Array.isArray(data.results) || data.results.length === 0) {
+        if (!data || !data.results || !Array.isArray(data.results)) {
             allMensagensCarregadas = true;
+            return;
+        }
+
+        if (data.results.length === 0) {
+            allMensagensCarregadas = true;
+            document.getElementById('loadMoreMsgBtn').style.display = 'none';
             return;
         }
 
@@ -54,12 +60,17 @@ async function carregarMensagensDinamicamente() {
             allMensagensCarregadas = true;
             document.getElementById('loadMoreMsgBtn').style.display = 'none';
         }
-
+        else {
+            const nextPageData = await apiService.getMessages(token, paginaAtualMensagens, limitMensagens);
+            if (!nextPageData.results || nextPageData.results.length === 0) {
+                allMensagensCarregadas = true;
+                document.getElementById('loadMoreMsgBtn').style.display = 'none';
+            }
+        }
 
         // Atualiza visibilidade do botão
         const btn = document.getElementById('loadMoreMsgBtn');
         if (btn) btn.style.display = allMensagensCarregadas ? 'none' : 'block';
-        console.log(allMensagensCarregadas)
     } catch (err) {
         console.error("Erro ao carregar mensagens:", err);
     } finally {
