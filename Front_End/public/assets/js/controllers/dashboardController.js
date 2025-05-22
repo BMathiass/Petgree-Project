@@ -1,27 +1,30 @@
 import { apiService } from '../services/apiServices.js';
 import { getToken } from '../utils/authUtils.js';
+import { showModal, showError } from '../utils/modalUtils.js';
 
 let currentPageUsuarios = 1;
-const limitUsuarios = 10;
+const limitUsuarios = 13;
 let paginaAtualMensagens = 1;
 const limitMensagens = 15;
 let loadingMensagens = false;
 let allMensagensCarregadas = false;
+let loadingUsuarios = false;
+let allUsuariosCarregados = false;
 
 document.addEventListener('DOMContentLoaded', async () => {
     const token = getToken();
     if (!token) {
-        alert('Acesso negado. Faça login como administrador.');
-        window.location.href = '../pages/login.html';
+        showError('Acesso negado. Faça login como administrador.');
+        setTimeout(() => window.location.href = '../pages/login.html', 3000);
         return;
     }
 
     try {
         await carregarMensagensDinamicamente();
-        await carregarUsuarios();
+        await carregarUsuariosDinamicamente();
     } catch (error) {
         console.error('Erro ao carregar dados do dashboard:', error);
-        alert(`Erro ao carregar dados do dashboard:\n${error.message || error}`);
+        showError('errorModal', `Erro ao carregar dados do dashboard:\n${error.message || error}`);
     }
 
     const form = document.getElementById('createUserForm');
@@ -44,10 +47,19 @@ async function carregarMensagensDinamicamente() {
             return;
         }
 
-        console.log('Mensagens recebidas:', data.results);
-        console.log('pagina atual: ', paginaAtualMensagens)
         renderizarMensagens(data.results, true);
         paginaAtualMensagens++;
+
+        if (data.results.length < limitMensagens) {
+            allMensagensCarregadas = true;
+            document.getElementById('loadMoreMsgBtn').style.display = 'none';
+        }
+
+
+        // Atualiza visibilidade do botão
+        const btn = document.getElementById('loadMoreMsgBtn');
+        if (btn) btn.style.display = allMensagensCarregadas ? 'none' : 'block';
+        console.log(allMensagensCarregadas)
     } catch (err) {
         console.error("Erro ao carregar mensagens:", err);
     } finally {
@@ -79,6 +91,13 @@ function renderizarMensagens(mensagens, append = false) {
 
         card.addEventListener('click', function (event) {
             if (event.target.tagName === 'BUTTON') return;
+
+            document.querySelectorAll('.message-card.expanded').forEach(card => {
+                if (card !== this) {
+                    card.classList.remove('expanded');
+                }
+            });
+
             this.classList.toggle('expanded');
         });
 
@@ -101,111 +120,249 @@ function renderizarMensagens(mensagens, append = false) {
 async function excluirMensagem(id) {
     const token = getToken();
     if (!token) {
-        alert('Token não encontrado. Faça login novamente.');
+        showError('errorModal', 'Token não encontrado. Faça login novamente.');
         return;
     }
 
-    try {
-        await apiService.excluirMensagem(id, token);
-        await carregarMensagensDinamicamente();
-    } catch (err) {
-        console.error(err);
-        alert('Erro ao excluir mensagem');
-    }
+    // Guarda a referência do card
+    const messageCard = document.querySelector(`.delete-btn[data-id="${id}"]`)?.closest('.message-card');
+
+    showModal(
+        'confirmationModal',
+        'Confirmar exclusão',
+        'Tem certeza que deseja excluir esta mensagem?',
+        async () => {
+            try {
+                await apiService.excluirMensagem(id, token);
+                
+                // Função para remover a mensagem
+                const removeMessageCard = () => {
+                    if (messageCard) {
+                        messageCard.style.opacity = '0';
+                        setTimeout(() => {
+                            messageCard.remove();
+                            
+                            document.getElementById('confirmationModal').classList.remove('show');
+                            
+                            // Verifica se precisa recarregar
+                            const lista = document.getElementById('messagesList');
+                            if (lista && lista.children.length === 0) {
+                                paginaAtualMensagens = 1;
+                                allMensagensCarregadas = false;
+                                carregarMensagensDinamicamente();
+                            }
+                        }, 300);
+                    }
+                };
+                
+                // Mostra o modal de sucesso
+                showModal(
+                    'confirmationModal',
+                    'Sucesso',
+                    'Mensagem excluída com sucesso!',
+                    removeMessageCard, // Executa ao clicar no OK
+                    true // Fecha automaticamente
+                );
+                
+                // Configura para remover também quando fechar automaticamente
+                setTimeout(removeMessageCard, 3000); // Mesmo tempo do auto-close
+                
+            } catch (err) {
+                console.error(err);
+                showError('errorModal', err.message || 'Erro ao excluir mensagem');
+            }
+        }
+    );
+
+    document.getElementById('cancelButton').onclick = () => {
+        document.getElementById('confirmationModal').classList.remove('show');
+    };
 }
 
-async function carregarUsuarios() {
-    const token = getToken();
+async function carregarUsuariosDinamicamente() {
+    if (loadingUsuarios || allUsuariosCarregados) return;
+
+    loadingUsuarios = true;
+
     try {
+        const token = getToken();
         const { results, total } = await apiService.getUsers(token, currentPageUsuarios, limitUsuarios);
-        renderizarUsuarios(results);
-        renderizarPaginacaoUsuarios(total);
+
+        if (!results || results.length === 0) {
+            allUsuariosCarregados = true;
+            return;
+        }
+
+        renderizarUsuarios(results, true);
+        currentPageUsuarios++;
+
+        const totalPaginas = Math.ceil(total / limitUsuarios);
+        if (currentPageUsuarios > totalPaginas) {
+            allUsuariosCarregados = true;
+        }
+
+        // Atualiza visibilidade do botão
+        const btn = document.getElementById('loadMoreUsersBtn');
+        if (btn) btn.style.display = allUsuariosCarregados ? 'none' : 'block';
+
     } catch (erro) {
-        console.error('Erro ao carregar usuários:', erro);
+        console.error('Erro ao carregar usuários dinamicamente:', erro);
+    } finally {
+        loadingUsuarios = false;
     }
 }
 
-function renderizarUsuarios(users) {
+
+function renderizarUsuarios(users, append = false) {
     const tbody = document.getElementById('usersTableBody');
-    tbody.innerHTML = '';
+
+    // Limpa completamente o conteúdo anterior se não for append
+    if (!append) {
+        tbody.innerHTML = '';
+    } else {
+        // Remove apenas os usuários que serão substituídos
+        users.forEach(user => {
+            const existingRow = document.getElementById(`user-row-${user.id_usuario}`);
+            if (existingRow) existingRow.remove();
+        });
+    }
 
     users.forEach(user => {
         const tr = document.createElement('tr');
+        tr.className = 'user-row';
+        tr.id = `user-row-${user.id_usuario}`; // ID único para a linha
+
         tr.innerHTML = `
-            <td><input value="${user.nome}" id="nome-${user.id_usuario}" /></td>
-            <td><input value="${user.email}" id="email-${user.id_usuario}" /></td>
-            <td>
-                <select id="role-${user.id_usuario}">
-                    <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>admin</option>
-                    <option value="user" ${user.role === 'user' ? 'selected' : ''}>user</option>
-                </select>
-            </td>
-            <td>
-                <button class="btn-salvar" data-id="${user.id_usuario}">Salvar</button>
-                <button class="btn-excluir" data-id="${user.id_usuario}">Excluir</button>
+            <td class="user-summary">
+                <div class="user-name">${user.nome}</div>
+                <div class="user-details" style="display:none">
+                    <div class="detail-row">
+                        <label>Email:</label>
+                        <input value="${user.email}" class="user-email" data-id="${user.id_usuario}" />
+                    </div>
+                    <div class="detail-row">
+                        <label>Papel:</label>
+                        <select class="user-role" data-id="${user.id_usuario}">
+                            <option value="admin" ${user.role === 'admin' ? 'selected' : ''}>admin</option>
+                            <option value="user" ${user.role === 'user' ? 'selected' : ''}>user</option>
+                        </select>
+                    </div>
+                    <div class="user-actions">
+                        <button class="btn-salvar" data-id="${user.id_usuario}">Salvar</button>
+                        <button class="btn-excluir" data-id="${user.id_usuario}">Excluir</button>
+                    </div>
+                </div>
             </td>
         `;
+
         tbody.appendChild(tr);
-    });
 
-    // Atribui eventos novamente
-    tbody.querySelectorAll('.btn-salvar').forEach(btn =>
-        btn.addEventListener('click', () => editarUsuario(btn.dataset.id))
-    );
-    tbody.querySelectorAll('.btn-excluir').forEach(btn =>
-        btn.addEventListener('click', () => excluirUsuario(btn.dataset.id))
-    );
-}
+        const detailsDiv = tr.querySelector('.user-details');
 
-function renderizarPaginacaoUsuarios(total) {
-    const totalPaginas = Math.ceil(total / limitUsuarios);
-    const container = document.getElementById('paginacao-usuarios');
-    container.innerHTML = '';
+        tr.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
 
-    for (let i = 1; i <= totalPaginas; i++) {
-        const btn = document.createElement('button');
-        btn.textContent = i;
-        if (i === currentPageUsuarios) {
-            btn.classList.add('ativo');
-        }
-        btn.addEventListener('click', () => {
-            if (i !== currentPageUsuarios) {
-                currentPageUsuarios = i;
-                carregarUsuarios();
+            const isExpanded = tr.classList.contains('expanded');
+
+            // Fecha todos
+            document.querySelectorAll('.user-row.expanded').forEach(row => {
+                row.classList.remove('expanded');
+                const details = row.querySelector('.user-details');
+                if (details) details.style.display = 'none';
+            });
+
+            // Alterna visibilidade da linha atual
+            if (!isExpanded) {
+                tr.classList.add('expanded');
+                if (detailsDiv) detailsDiv.style.display = 'block';
+            } else {
+                tr.classList.remove('expanded');
+                if (detailsDiv) detailsDiv.style.display = 'none';
             }
         });
-        container.appendChild(btn);
-    }
+
+        // Adiciona eventos aos botões
+        tr.querySelector('.btn-salvar')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            editarUsuario(user.id_usuario);
+        });
+
+        tr.querySelector('.btn-excluir')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            excluirUsuario(user.id_usuario);
+        });
+        tr.dataset.role = user.role;
+    });
 }
 
 async function editarUsuario(id) {
     const token = getToken();
-    const nome = document.getElementById(`nome-${id}`).value;
+    const nome = document.getElementById(`nome-${id}`)?.value || '';
     const email = document.getElementById(`email-${id}`).value;
     const role = document.getElementById(`role-${id}`).value;
 
     try {
         await apiService.updateUser(id, { nome, email, role }, token);
-        await carregarUsuarios();
-        alert('Usuário atualizado!');
+        showModal(
+            'confirmationModal',
+            'Sucesso',
+            'Usuário atualizado com sucesso!',
+            () => document.getElementById('confirmationModal').classList.remove('show')
+        );
+        // Mantém o item expandido após edição
+        const row = document.querySelector(`[data-id="${id}"]`).closest('.user-row');
+        row.querySelector('.user-details').style.display = 'block';
     } catch (err) {
         console.error('Erro ao atualizar usuário:', err);
-        alert('Erro ao atualizar usuário');
+        showError('errorModal', 'Erro ao atualizar usuário');
     }
 }
 
 async function excluirUsuario(id) {
     const token = getToken();
-    if (!confirm('Tem certeza que deseja excluir este usuário?')) return;
-
-    try {
-        await apiService.deleteUser(id, token);
-        alert('Usuário excluído!');
-        await carregarUsuarios();
-    } catch (err) {
-        console.error('Erro ao excluir usuário:', err);
-        alert('Erro ao excluir usuário');
+    if (!token) {
+        showError('errorModal', 'Token não encontrado. Faça login novamente.');
+        return;
     }
+
+    // Mostra o modal de confirmação
+    showModal(
+        'confirmationModal',
+        'Confirmar exclusão',
+        'Tem certeza que deseja excluir este usuário?',
+        async () => {
+            try {
+                await apiService.deleteUser(id, token);
+
+                // Remove visualmente o usuário da lista
+                const userRow = document.querySelector(`.btn-excluir[data-id="${id}"]`)?.closest('.user-row');
+                if (userRow) {
+                    userRow.style.opacity = '0';
+                    setTimeout(() => {
+                        userRow.remove();
+
+                        // Verifica se não há mais usuários e recarrega se necessário
+                        if (document.getElementById('usersTableBody').children.length === 0) {
+                            currentPageUsuarios = 1;
+                            allUsuariosCarregados = false;
+                            carregarUsuariosDinamicamente();
+                        }
+                    }, 300);
+                }
+
+                // Fecha o modal após a confirmação
+                document.getElementById('confirmationModal').classList.remove('show');
+            } catch (err) {
+                console.error('Erro ao excluir usuário:', err);
+                showError('errorModal', 'Erro ao excluir usuário');
+            }
+        }
+    );
+
+    // Configura o botão de cancelar
+    document.getElementById('cancelButton').onclick = () => {
+        document.getElementById('confirmationModal').classList.remove('show');
+    };
 }
 
 async function handleCreateUser(event) {
@@ -218,11 +375,19 @@ async function handleCreateUser(event) {
 
     try {
         await apiService.createUser({ nome, email, senha, role }, token);
-        alert('Usuário criado com sucesso');
+        showModal(
+            'confirmationModal',
+            'Sucesso',
+            'Usuário criado com sucesso',
+            () => {
+                document.getElementById('confirmationModal').classList.remove('show');
+                window.location.reload();
+            }
+        );
         window.location.reload();
     } catch (err) {
         console.error('Erro ao criar usuário:', err);
-        alert('Erro ao criar usuário');
+        showError('errorModal', 'Erro ao criar usuário');
     }
 }
 
@@ -257,14 +422,10 @@ function configurarAbas() {
         window.location.href = '../pages/login.html';
     });
 
-    // Scroll infinito para mensagens
-    const mensagensContainer = document.getElementById('messagesList');
-    mensagensContainer.addEventListener('scroll', () => {
-        if (
-            mensagensContainer.scrollTop + mensagensContainer.clientHeight >=
-            mensagensContainer.scrollHeight - 50
-        ) {
-            carregarMensagensDinamicamente();
-        }
+    document.getElementById('loadMoreUsersBtn')?.addEventListener('click', async () => {
+        await carregarUsuariosDinamicamente();
+    });
+    document.getElementById('loadMoreMsgBtn')?.addEventListener('click', async () => {
+        await carregarMensagensDinamicamente();
     });
 }

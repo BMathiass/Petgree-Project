@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="../assets/css/style.css" />
+  <link rel="stylesheet" href="../assets/css/dashboard.css" />
+  <link rel="stylesheet" href="../assets/css/modal.css" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-
 </head>
 
 <body>
@@ -18,54 +19,84 @@
         <li><a href="#" id="link-usuarios"><span class="material-symbols-outlined">person</span>Usuários</a></li>
         <li><a href="#" id="link-logout"><span class="material-symbols-outlined">logout</span>Logout</a></li>
       </ul>
-
     </div>
 
     <div class="main-content">
       <h1>Dashboard Admin</h1>
 
+      <!-- Aba de Mensagens -->
       <div id="mensagensTab" class="tab-content active">
         <section id="messagesSection">
           <h2>Mensagens Recebidas</h2>
-          <div id="messagesList" class="message-grid"></div>
+          <div class="message-scroll">
+            <div id="messagesList" class="message-grid"></div>
+          </div>
         </section>
         <div id="pagination" class="pagination-container"></div>
+        <div class="load-more-container">
+          <button id="loadMoreMsgBtn" class="load-more-btn">
+            Ver mais Mensagens <span class="arrow">⬇️</span>
+          </button>
+        </div>
       </div>
 
+      <!-- Aba de Usuários -->
       <div id="usuariosTab" class="tab-content">
-        <section id="usersSection">
-          <h2>Gerenciar Usuários</h2>
-          <table>
-            <thead>
-              <tr>
-                <th>Nome</th>
-                <th>Email</th>
-                <th>Papel</th>
-                <th>Ações</th>
-              </tr>
-            </thead>
-            <tbody id="usersTableBody"></tbody>
-          </table>
-        </section>
-        <div id="paginacao-usuarios" class="pagination-container"></div>
+        <div class="usuarios-content-wrapper">
+          <!-- Seção de Criação -->
+          <section id="createUserSection" class="usuario-section">
+            <h2>Criar Novo Usuário</h2>
+            <form id="createUserForm">
+              <input type="text" id="newNome" placeholder="Nome" required />
+              <input type="email" id="newEmail" placeholder="Email" required />
+              <input type="password" id="newSenha" placeholder="Senha" required />
+              <select id="newRole">
+                <option value="user">user</option>
+                <option value="admin">admin</option>
+              </select>
+              <button type="submit">Criar Usuário</button>
+            </form>
+          </section>
 
-        <section id="createUserSection">
-          <h2>Criar Novo Usuário</h2>
-          <form id="createUserForm">
-            <input type="text" id="newNome" placeholder="Nome" required />
-            <input type="email" id="newEmail" placeholder="Email" required />
-            <input type="password" id="newSenha" placeholder="Senha" required />
-            <select id="newRole">
-              <option value="user">user</option>
-              <option value="admin">admin</option>
-            </select>
-            <button type="submit">Criar Usuário</button>
-          </form>
-        </section>
+          <!-- Seção de Gerenciamento -->
+          <section id="usersSection" class="usuario-section">
+            <h2>Gerenciar Usuários</h2>
+            <div class="user-scroll">
+              <table>
+                <tbody id="usersTableBody"></tbody>
+              </table>
+            </div>
+            <div id="paginacao-usuarios" class="pagination-container"></div>
+            <div class="load-more-container">
+              <button id="loadMoreUsersBtn" class="load-more-btn">
+                Ver mais usuários <span class="arrow">⬇️</span>
+              </button>
+            </div>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal de Confirmação Genérico -->
+  <div id="confirmationModal" class="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">Confirmar ação</h2>
+      <p id="modalRequestId">Tem certeza que deseja realizar esta ação?</p>
+      <div class="modal-actions">
+        <button id="cancelButton" class="btn btn-secondary">Cancelar</button>
+        <button id="confirmButton" class="btn btn-primary">Confirmar</button>
       </div>
     </div>
   </div>
 
+  <!-- Modal de Erro (já deve existir pelo seu código) -->
+  <div id="errorModal" class="modal">
+    <div class="modal-content">
+      <span id="closeErrorModal" class="close-modal">×</span>
+      <p id="errorMessage"></p>
+    </div>
+  </div>
   <script type="module" src="../assets/js/controllers/dashboardController.js" defer></script>
 </body>
+
 </html>

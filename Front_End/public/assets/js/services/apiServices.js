@@ -64,7 +64,7 @@ class ApiService {
             headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) throw new Error('Erro ao buscar mensagens');
-        return await response.json(); 
+        return await response.json();
     }
 
     async getUsers(token, page = 1, limit = 10) {
@@ -126,9 +126,6 @@ class ApiService {
     }
 
     async excluirMensagem(id, token) {
-        const confirmacao = confirm("Tem certeza que deseja excluir esta mensagem?");
-        if (!confirmacao) return;
-
         try {
             const response = await fetch(`${this.baseURL}/api/admin/message/${id}`, {
                 method: 'DELETE',
@@ -138,13 +135,14 @@ class ApiService {
             });
 
             if (!response.ok) {
-                throw new Error("Erro ao excluir a mensagem");
+                const errorData = await response.json();
+                throw new Error(errorData.message || "Erro ao excluir a mensagem");
             }
 
-            alert("Mensagem excluída com sucesso!");
+            return await response.json(); // Retorna os dados se necessário
         } catch (error) {
             console.error("Erro ao excluir mensagem:", error);
-            alert("Erro ao excluir mensagem. Verifique o console para detalhes.");
+            throw error; // Propaga o erro para ser tratado no controller
         }
     }
 
