@@ -10,9 +10,9 @@ const getMessages = async (req, res) => {
 
   try {
     const query = `
-      SELECT * FROM contatos_clientes
+      SELECT * FROM mensagens_clientes
       WHERE nome ILIKE $1 OR email ILIKE $1 OR mensagem ILIKE $1
-      ORDER BY data_insercao DESC
+      ORDER BY data_envio DESC
       LIMIT $2 OFFSET $3
     `;
     const values = [`%${search}%`, limit, offset];
@@ -20,7 +20,7 @@ const getMessages = async (req, res) => {
 
     // Count total
     const countResult = await db.query(`
-      SELECT COUNT(*) FROM contatos_clientes
+      SELECT COUNT(*) FROM mensagens_clientes
       WHERE nome ILIKE $1 OR email ILIKE $1 OR mensagem ILIKE $1
     `, [`%${search}%`]);
 
@@ -38,7 +38,7 @@ const getMessages = async (req, res) => {
 
 const deleteMessage = async (req, res) => {
   const { id } = req.params;
-  await db.query('DELETE FROM contatos_clientes WHERE id_solicitacao = $1', [id]);
+  await db.query('DELETE FROM mensagens_clientes WHERE id_mensagem = $1', [id]);
   res.status(200).json({ message: 'Mensagem apagada.' });
   logger.info(`Admin ${req.user.email} deletou a mensagem ID ${id}`);
 };
@@ -51,10 +51,10 @@ const getUsers = async (req, res) => {
 
   try {
     const query = `
-      SELECT id_usuario, nome, email, telefone, cpf, role, criado_em
+      SELECT id_usuario, nome, email, telefone, cpf, role, data_criacao
       FROM usuarios
       WHERE nome ILIKE $1 OR email ILIKE $1 OR cpf ILIKE $1
-      ORDER BY criado_em DESC
+      ORDER BY data_criacao DESC
       LIMIT $2 OFFSET $3
     `;
     const values = [`%${search}%`, limit, offset];

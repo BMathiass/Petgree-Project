@@ -97,7 +97,7 @@ function renderizarMensagens(mensagens, append = false) {
             <div class="message-body">${msg.mensagem}</div>
             <div class="message-actions">
                 <button class="responder-btn" data-email="${msg.email}" data-nome="${msg.nome}">Responder</button>
-                <button class="delete-btn" data-id="${msg.id_solicitacao}">Excluir</button>
+                <button class="delete-btn" data-id="${msg.id_mensagem}">Excluir</button>
             </div>`;
 
         card.addEventListener('click', function (event) {
@@ -114,7 +114,7 @@ function renderizarMensagens(mensagens, append = false) {
 
         card.querySelector('.delete-btn').addEventListener('click', (e) => {
             e.stopPropagation();
-            excluirMensagem(msg.id_solicitacao);
+            excluirMensagem(msg.id_mensagem);
         });
 
         card.querySelector('.responder-btn').addEventListener('click', (e) => {
